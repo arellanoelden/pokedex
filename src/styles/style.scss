@@ -1,0 +1,9 @@
+.pokedex {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.pokedex-container {
+  flex-grow: 1;
+}

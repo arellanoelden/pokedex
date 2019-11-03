@@ -1,5 +1,6 @@
 import React from "react";
 import Pokemon from "./Pokemon";
+import Grid from "@material-ui/core/Grid";
 
 class Pokedex extends React.Component {
   state = {
@@ -31,13 +32,17 @@ class Pokedex extends React.Component {
   render() {
     const { ids } = this.state;
     return (
-      <div className="pokedex">
-        {ids.map(id => {
-          return (
-            /* eslint-disable-next-line */
-            <Pokemon id={id} key={id} />
-          );
-        })}
+      <div className="pokedex-container" style={{ padding: 15 }}>
+        <Grid container spacing={3} className="pokedex">
+          {ids.map(id => {
+            return (
+              /* eslint-disable-next-line */
+              <Grid item xs={12} sm={6} md={3}>
+                <Pokemon id={id} key={id} />
+              </Grid>
+            );
+          })}
+        </Grid>
       </div>
     );
   }

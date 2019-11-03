@@ -10,7 +10,8 @@
     "test:coverage": "jest --silent --coverage",
     "format": "prettier --write \"src/**/*.{js,jsx}\"",
     "lint": "eslint \"src/**/*.{js,jsx}\" --quiet",
-    "dev": "parcel src/index.html"
+    "dev": "parcel src/index.html",
+    "start": "parcel src/index.html"
   },
   "keywords": [],
   "author": "",
@@ -32,6 +33,9 @@
     "react-test-renderer": "^16.8.3"
   },
   "dependencies": {
+    "@material-ui/core": "^4.5.2",
+    "@material-ui/icons": "^4.5.1",
+    "@material-ui/styles": "^4.5.2",
     "@reach/router": "^1.2.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"

@@ -1,4 +1,5 @@
 body {
+  margin: 0;
   background-color: #ef5350;
 }
 .pokedex {
@@ -7,11 +8,20 @@ body {
   flex-wrap: wrap;
   justify-content: flex-start;
 }
+.pokedex-container {
+  flex-grow: 1;
+}
 .pokemon {
+  height: auto;
+}
+.pokemon-image {
+  background-image: url("../sprites.png");
+}
+/* .pokemon {
   flex: 1;
   min-width: 30%;
-  height: 50vh;
-  margin: 0.5rem;
+  /* height: 50vh; */
+/* margin: 0.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -19,4 +29,4 @@ body {
   background-color: aqua;
   border-color: 2px solid black;
   border-radius: 0.5rem;
-}
+} */
