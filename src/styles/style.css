@@ -1,0 +1,22 @@
+body {
+  background-color: #ef5350;
+}
+.pokedex {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.pokemon {
+  flex: 1;
+  min-width: 30%;
+  height: 50vh;
+  margin: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: aqua;
+  border-color: 2px solid black;
+  border-radius: 0.5rem;
+}
