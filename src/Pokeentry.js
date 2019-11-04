@@ -15,6 +15,8 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 
 const styles = theme => ({
   link: {
@@ -69,8 +71,16 @@ class Pokeentry extends React.Component {
     fetch(`https://pokeapi.co/api/v2/pokemon-species/${this.state.id}`)
       .then(res => res.json())
       .then(response => {
+        let flavorIndex = 1;
+        const flavorEntries = response.flavor_text_entries;
+        while (
+          flavorEntries[flavorIndex] &&
+          flavorEntries[flavorIndex].language.name !== "en"
+        ) {
+          flavorIndex++;
+        }
         this.setState({
-          description: response.flavor_text_entries[1].flavor_text
+          description: flavorEntries[flavorIndex].flavor_text
         });
 
         fetch(response.evolution_chain.url)
@@ -80,18 +90,21 @@ class Pokeentry extends React.Component {
             let chains = response.chain.evolves_to;
             let chainId = 0;
             if (chains) {
-              chainId = response.chain.species.url.charAt(
-                response.chain.species.url.length - 2
-              );
+              // starting ID not given
+              const index = response.chain.species.url.split("/");
+              chainId = index[index.length - 2];
+
               chain.push({
                 name: response.chain.species.name,
-                url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${chainId}.png`
+                url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${chainId}.png`,
+                pokeId: chainId
               });
               while (chains[0] && chains[0].evolves_to) {
                 chainId++;
                 chain.push({
                   name: chains[0].species.name,
-                  url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${chainId}.png`
+                  url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${chainId}.png`,
+                  pokeId: chainId
                 });
                 chains = chains[0].evolves_to;
               }
@@ -109,11 +122,7 @@ class Pokeentry extends React.Component {
     const { classes } = this.props;
     return (
       <div className="pokedex-container" style={{ padding: 15 }}>
-        <Card
-          className="pokemon ${classes.imgChain}"
-          style={{ padding: 10 }}
-          id={id}
-        >
+        <Card className="pokemon" style={{ padding: 10 }} id={id}>
           <CardActionArea className={classes.card}>
             <CardMedia
               className={classes.img}
@@ -137,6 +146,23 @@ class Pokeentry extends React.Component {
                   />
                 );
               })}
+              <Breadcrumbs separator="›" aria-label="breadcrumb">
+                {this.state.chain
+                  ? this.state.chain.map((evolution, index) => {
+                      return (
+                        <div key={index} style={{ padding: 0 }}>
+                          <img
+                            className={classes.imgChain}
+                            src={evolution.url}
+                            alt={evolution.name}
+                          />
+                          {evolution.pokeId}
+                          {evolution.name}
+                        </div>
+                      );
+                    })
+                  : ""}
+              </Breadcrumbs>
               <List>
                 {this.state.chain
                   ? this.state.chain.map((evolution, index) => {

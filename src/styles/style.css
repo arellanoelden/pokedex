@@ -14,9 +14,6 @@ body {
 .pokemon {
   height: auto;
 }
-.pokemon-image {
-  background-image: url("../sprites.png");
-}
 /* .pokemon {
   flex: 1;
   min-width: 30%;
