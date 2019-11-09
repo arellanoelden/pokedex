@@ -13,10 +13,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Divider from "@material-ui/core/Divider";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 
 const styles = theme => ({
   link: {
@@ -47,19 +44,36 @@ const styles = theme => ({
 });
 
 class Pokeentry extends React.Component {
-  state = {
-    loading: true,
-    imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
-      this.props.id
-    }.png`,
-    id: this.props.id
-  };
+  constructor(props) {
+    super(props);
+    const map = require("./Pokemap.js").objectMap();
+    const id = isNaN(this.props.id) ? map[this.props.id] : this.props.id;
+    this.state = {
+      loading: true,
+      id,
+      imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
+    };
+    this.handlePokemon = this.handlePokemon.bind(this);
+    this.setPokeInfo = this.setPokeInfo.bind(this);
+  }
   componentDidMount() {
-    fetch(`https://pokeapi.co/api/v2/pokemon/${this.state.id}/`)
+    this.setPokeInfo(this.state.id);
+  }
+  setPokeInfo = id => {
+    fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`)
       .then(res => res.json())
       .then(response => {
         let name = response.name;
         let types = response.types;
+        types.forEach(type => {
+          const typeUrl = type.type.url;
+          fetch(typeUrl)
+            .then(res => res.json())
+            .then(response => {
+              console.log(response);
+            });
+          console.log(type.type.url);
+        });
         this.setState({
           name,
           types,
@@ -68,7 +82,7 @@ class Pokeentry extends React.Component {
       })
       .catch(error => console.error("Error:", error));
 
-    fetch(`https://pokeapi.co/api/v2/pokemon-species/${this.state.id}`)
+    fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`)
       .then(res => res.json())
       .then(response => {
         let flavorIndex = 1;
@@ -115,7 +129,16 @@ class Pokeentry extends React.Component {
           })
           .catch(error => console.error("Error:", error));
       });
-  }
+  };
+  handlePokemon = id => {
+    return () => {
+      this.setState({
+        id,
+        imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
+      });
+      this.setPokeInfo(id);
+    };
+  };
   render() {
     if (this.state.loading) return <h1>loading ... </h1>;
     const { name, imageUrl, id, types, description } = this.state;
@@ -146,23 +169,6 @@ class Pokeentry extends React.Component {
                   />
                 );
               })}
-              <Breadcrumbs separator="›" aria-label="breadcrumb">
-                {this.state.chain
-                  ? this.state.chain.map((evolution, index) => {
-                      return (
-                        <div key={index} style={{ padding: 0 }}>
-                          <img
-                            className={classes.imgChain}
-                            src={evolution.url}
-                            alt={evolution.name}
-                          />
-                          {evolution.pokeId}
-                          {evolution.name}
-                        </div>
-                      );
-                    })
-                  : ""}
-              </Breadcrumbs>
               <List>
                 {this.state.chain
                   ? this.state.chain.map((evolution, index) => {
@@ -187,6 +193,28 @@ class Pokeentry extends React.Component {
                 Back
               </Link>
             </Button>
+            <Breadcrumbs separator="›" aria-label="breadcrumb">
+              {this.state.chain
+                ? this.state.chain.map((evolution, index) => {
+                    return (
+                      <div
+                        key={index}
+                        style={{ padding: 0 }}
+                        role="link"
+                        onClick={this.handlePokemon(evolution.pokeId)}
+                      >
+                        <img
+                          className={classes.imgChain}
+                          src={evolution.url}
+                          alt={evolution.name}
+                        />
+                        {evolution.pokeId}
+                        {evolution.name}
+                      </div>
+                    );
+                  })
+                : ""}
+            </Breadcrumbs>
           </CardActions>
         </Card>
       </div>

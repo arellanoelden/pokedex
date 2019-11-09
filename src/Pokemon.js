@@ -11,10 +11,13 @@ import {
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
-const styles = theme => ({
+const styles = () => ({
   link: {
     textDecoration: "none",
     color: "white"
+  },
+  header: {
+    textAlign: "center"
   }
 });
 
@@ -27,17 +30,12 @@ class Pokedex extends React.Component {
     id: this.props.id
   };
   componentDidMount() {
-    fetch(`https://pokeapi.co/api/v2/pokemon/${this.state.id}/`)
-      .then(res => res.json())
-      .then(response => {
-        let name = response.forms[0].name;
-        let image = response.sprites.front_default;
-        this.setState({
-          name,
-          loading: false
-        });
-      })
-      .catch(error => console.error("Error:", error));
+    const nameMap = require("./Pokemap").objectMap();
+    const name = nameMap[this.props.id];
+    this.setState({
+      name,
+      loading: false
+    });
   }
   render() {
     if (this.state.loading)
@@ -60,23 +58,23 @@ class Pokedex extends React.Component {
     const { classes } = this.props;
     const { name, id, imageUrl } = this.state;
     return (
-      <Card className="pokemon" id={id}>
-        <CardActionArea>
-          <CardMedia component="img" image={imageUrl} alt={name} />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              {name}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-        <CardActions>
-          <Button variant="contained" size="small" color="primary">
-            <Link className={classes.link} to={`/${id}`}>
-              View
-            </Link>
-          </Button>
-        </CardActions>
-      </Card>
+      <Link className={classes.link} to={`/${id}`}>
+        <Card className="pokemon" id={id}>
+          <CardActionArea>
+            <CardMedia component="img" image={imageUrl} alt={name} />
+            <CardContent>
+              <Typography
+                className={classes.header}
+                gutterBottom
+                variant="h4"
+                component="h2"
+              >
+                {name}
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+        </Card>
+      </Link>
     );
   }
 }
