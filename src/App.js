@@ -6,34 +6,36 @@ import Pokeentry from "./Pokeentry";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { red, orange } from "@material-ui/core/colors";
 import "./styles/style.css";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
-const outerTheme = createMuiTheme({
-  palette: {
-    primary: red,
-    secondary: {
-      main: orange[500]
-    }
-  }
-});
+function App() {
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-  render() {
-    return (
-      <ThemeProvider theme={outerTheme}>
-        <div>
-          <NavBar />
-          <Router>
-            <Pokedex path="/" />
-            <Pokeentry path="/:id" />
-          </Router>
-        </div>
-      </ThemeProvider>
-    );
-  }
+  const theme = React.useMemo(
+    () =>
+      createMuiTheme({
+        palette: {
+          primary: red,
+          secondary: {
+            main: orange[500]
+          },
+          type: prefersDarkMode ? "dark" : "light"
+        }
+      }),
+    [prefersDarkMode]
+  );
+
+  return (
+    <ThemeProvider theme={theme}>
+      <div>
+        <NavBar />
+        <Router>
+          <Pokedex path="/" />
+          <Pokeentry path="/:id" />
+        </Router>
+      </div>
+    </ThemeProvider>
+  );
 }
 
 export default App;

@@ -35,7 +35,8 @@ const styles = theme => ({
     [theme.breakpoints.up("md")]: {
       display: "flex",
       justifyContent: "flex-start"
-    }
+    },
+    backgroundColor: theme.palette.primary.main
   },
   imgChain: {
     height: "4rem",

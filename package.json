@@ -15,6 +15,7 @@
     "startparcel": "parcel public/index.html",
     "start": "react-scripts start"
   },
+  "homepage": "https://arellanoelden.github.io/pokedex/",
   "keywords": [],
   "author": "",
   "license": "ISC",
