@@ -1,15 +1,15 @@
 import React from "react";
 import { Link } from "@reach/router";
-import Button from "@material-ui/core/Button";
 import {
   Card,
   CardActionArea,
   CardMedia,
-  CardContent,
-  CardActions
+  CardContent
 } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
+import Skeleton from "@material-ui/lab/Skeleton";
+import { useTheme } from "@material-ui/styles";
 
 const styles = () => ({
   link: {
@@ -18,6 +18,9 @@ const styles = () => ({
   },
   header: {
     textAlign: "center"
+  },
+  skeleton: {
+    marginBottom: "0.75rem"
   }
 });
 
@@ -33,44 +36,48 @@ class Pokedex extends React.Component {
     const nameMap = require("./Pokemap").objectMap();
     const name = nameMap[this.props.id];
     this.setState({
-      name,
+      name
+    });
+  }
+  handleImageLoaded() {
+    this.setState({
       loading: false
     });
   }
   render() {
-    if (this.state.loading)
-      return (
-        <Card className="pokemon" id={id}>
-          <CardActionArea>
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                Loading...
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          <CardActions>
-            <Button variant="contained" size="small" color="primary">
-              ...
-            </Button>
-          </CardActions>
-        </Card>
-      );
     const { classes } = this.props;
-    const { name, id, imageUrl } = this.state;
+    const { name, id, imageUrl, loading } = this.state;
     return (
       <Link className={classes.link} to={`/${id}`}>
-        <Card className="pokemon" id={id}>
+        <Card className="pokemon" id={`${id}`}>
           <CardActionArea>
-            <CardMedia component="img" image={imageUrl} alt={name} />
+            <CardMedia
+              component="img"
+              onLoad={this.handleImageLoaded.bind(this)}
+              image={imageUrl}
+              alt={name}
+            />
             <CardContent>
-              <Typography
-                className={classes.header}
-                gutterBottom
-                variant="h4"
-                component="h2"
-              >
-                {name}
-              </Typography>
+              {loading ? (
+                <React.Fragment>
+                  <Skeleton
+                    variant="rect"
+                    width="100%"
+                    height={300}
+                    className={classes.skeleton}
+                  />
+                  <Skeleton variant="rect" width="100%" />
+                </React.Fragment>
+              ) : (
+                <Typography
+                  className={classes.header}
+                  gutterBottom
+                  variant="h3"
+                  component="h2"
+                >
+                  {name.charAt(0).toUpperCase() + name.slice(1)}
+                </Typography>
+              )}
             </CardContent>
           </CardActionArea>
         </Card>
