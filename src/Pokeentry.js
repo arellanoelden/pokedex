@@ -14,6 +14,7 @@ import Chip from "@material-ui/core/Chip";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 const styles = theme => ({
   link: {
@@ -148,9 +149,73 @@ class Pokeentry extends React.Component {
     };
   };
   render() {
-    if (this.state.loading) return <h1>loading ... </h1>;
-    const { name, imageUrl, id, types, description, colors } = this.state;
     const { classes } = this.props;
+    if (this.state.loading) {
+      return (
+        <div className="pokedex-container" style={{ padding: 15 }}>
+          <Card className={classes.card} id={id}>
+            <CardActionArea className={classes.cardContent}>
+              <Skeleton
+                variant="rect"
+                width="35%"
+                height={400}
+                className={classes.skeleton}
+              />
+              <CardContent style={{ width: "70%" }}>
+                <Skeleton variant="rect" width="30%" />
+                <br />
+                <Skeleton variant="rect" width="100%" />
+                <br />
+                <Skeleton variant="rect" width="80%" />
+                <br />
+                <div style={{ display: "flex", marginBottom: "1rem" }}>
+                  <Skeleton
+                    style={{ marginRight: "0.5rem" }}
+                    variant="rect"
+                    width={50}
+                    height={20}
+                  />
+                  <Skeleton
+                    style={{ marginRight: "0.5rem" }}
+                    variant="rect"
+                    width={50}
+                    height={20}
+                  />
+                </div>
+                <div style={{ display: "flex" }}>
+                  <Skeleton
+                    style={{ marginRight: "1rem" }}
+                    variant="circle"
+                    width={40}
+                    height={40}
+                  />
+                  <Skeleton
+                    style={{ marginRight: "1rem" }}
+                    variant="circle"
+                    width={40}
+                    height={40}
+                  />
+                  <Skeleton
+                    style={{ marginRight: "1rem" }}
+                    variant="circle"
+                    width={40}
+                    height={40}
+                  />
+                </div>
+              </CardContent>
+            </CardActionArea>
+            <CardActions>
+              <Button size="small">
+                <Link className={classes.link} to="/">
+                  Back
+                </Link>
+              </Button>
+            </CardActions>
+          </Card>
+        </div>
+      );
+    }
+    const { name, imageUrl, id, types, description, colors } = this.state;
     return (
       <div className="pokedex-container" style={{ padding: 15 }}>
         <Card className={classes.card} id={id}>
