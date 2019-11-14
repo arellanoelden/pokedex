@@ -9,9 +9,8 @@ import {
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Skeleton from "@material-ui/lab/Skeleton";
-import { useTheme } from "@material-ui/styles";
 
-const styles = () => ({
+const styles = theme => ({
   link: {
     textDecoration: "none",
     color: "white"
@@ -21,6 +20,10 @@ const styles = () => ({
   },
   skeleton: {
     marginBottom: "0.75rem"
+  },
+  card: {
+    backgroundColor: theme.palette.secondary.main,
+    color: "white"
   }
 });
 
@@ -49,7 +52,7 @@ class Pokedex extends React.Component {
     const { name, id, imageUrl, loading } = this.state;
     return (
       <Link className={classes.link} to={`/${id}`}>
-        <Card className="pokemon" id={`${id}`}>
+        <Card className={classes.card} id={`${id}`}>
           <CardActionArea>
             <CardMedia
               component="img"
@@ -72,7 +75,7 @@ class Pokedex extends React.Component {
                 <Typography
                   className={classes.header}
                   gutterBottom
-                  variant="h3"
+                  variant="h4"
                   component="h2"
                 >
                   {name.charAt(0).toUpperCase() + name.slice(1)}

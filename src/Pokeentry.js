@@ -31,28 +31,35 @@ const styles = theme => ({
       width: "30%"
     }
   },
-  card: {
+  cardContent: {
     [theme.breakpoints.up("md")]: {
       display: "flex",
       justifyContent: "flex-start"
-    },
-    backgroundColor: theme.palette.primary.main
+    }
   },
-  imgChain: {
-    height: "4rem",
-    marginRight: "1rem"
+  card: {
+    padding: 10,
+    backgroundColor: theme.palette.secondary.main
+  },
+  breadcrumbs: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
   }
 });
 
 class Pokeentry extends React.Component {
   constructor(props) {
     super(props);
-    const map = require("./Pokemap.js").objectMap();
+    const maps = require("./Pokemap.js");
+    const map = maps.objectMap();
+    const colors = maps.typeColor();
     const id = isNaN(this.props.id) ? map[this.props.id] : this.props.id;
     this.state = {
       loading: true,
       id,
-      imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
+      imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
+      colors
     };
     this.handlePokemon = this.handlePokemon.bind(this);
     this.setPokeInfo = this.setPokeInfo.bind(this);
@@ -142,12 +149,12 @@ class Pokeentry extends React.Component {
   };
   render() {
     if (this.state.loading) return <h1>loading ... </h1>;
-    const { name, imageUrl, id, types, description } = this.state;
+    const { name, imageUrl, id, types, description, colors } = this.state;
     const { classes } = this.props;
     return (
       <div className="pokedex-container" style={{ padding: 15 }}>
-        <Card className="pokemon" style={{ padding: 10 }} id={id}>
-          <CardActionArea className={classes.card}>
+        <Card className={classes.card} id={id}>
+          <CardActionArea className={classes.cardContent}>
             <CardMedia
               className={classes.img}
               component="img"
@@ -162,60 +169,45 @@ class Pokeentry extends React.Component {
                 {description}
               </Typography>
               {types.map((type, index) => {
+                const color = colors[type.type.name];
                 return (
                   <Chip
                     key={index}
-                    style={{ marginRight: 10, marginTop: 10 }}
+                    style={{
+                      marginRight: 10,
+                      marginTop: 10,
+                      backgroundColor: color,
+                      color: "#FFF"
+                    }}
                     label={type.type.name}
                   />
                 );
               })}
-              <List>
+              <Breadcrumbs separator="" aria-label="breadcrumb">
                 {this.state.chain
                   ? this.state.chain.map((evolution, index) => {
                       return (
-                        <ListItem key={index} style={{ padding: 0 }}>
-                          <img
-                            className={classes.imgChain}
-                            src={evolution.url}
-                            alt={evolution.name}
-                          />
+                        <div
+                          key={index}
+                          role="link"
+                          onClick={this.handlePokemon(evolution.pokeId)}
+                          className={classes.breadcrumbs}
+                        >
+                          <img src={evolution.url} alt={evolution.name} />
                           {evolution.name}
-                        </ListItem>
+                        </div>
                       );
                     })
                   : ""}
-              </List>
+              </Breadcrumbs>
             </CardContent>
           </CardActionArea>
           <CardActions>
-            <Button variant="contained" size="small" color="primary">
-              <Link className={classes.link} to={`/#${id}`}>
+            <Button size="small">
+              <Link className={classes.link} to="/">
                 Back
               </Link>
             </Button>
-            <Breadcrumbs separator="›" aria-label="breadcrumb">
-              {this.state.chain
-                ? this.state.chain.map((evolution, index) => {
-                    return (
-                      <div
-                        key={index}
-                        style={{ padding: 0 }}
-                        role="link"
-                        onClick={this.handlePokemon(evolution.pokeId)}
-                      >
-                        <img
-                          className={classes.imgChain}
-                          src={evolution.url}
-                          alt={evolution.name}
-                        />
-                        {evolution.pokeId}
-                        {evolution.name}
-                      </div>
-                    );
-                  })
-                : ""}
-            </Breadcrumbs>
           </CardActions>
         </Card>
       </div>

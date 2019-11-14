@@ -54,7 +54,7 @@ class NavBar extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <AppBar position="sticky" color="secondary">
+      <AppBar position="sticky" color="primary">
         <Toolbar variant="dense">
           <Typography variant="h6" color="inherit">
             <Link className={classes.link} to="/">
