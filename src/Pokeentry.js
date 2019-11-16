@@ -11,10 +11,10 @@ import {
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Skeleton from "@material-ui/lab/Skeleton";
+import IconButton from "@material-ui/core/IconButton";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 const styles = theme => ({
   link: {
@@ -153,7 +153,7 @@ class Pokeentry extends React.Component {
     if (this.state.loading) {
       return (
         <div className="pokedex-container" style={{ padding: 15 }}>
-          <Card className={classes.card} id={id}>
+          <Card className={classes.card}>
             <CardActionArea className={classes.cardContent}>
               <Skeleton
                 variant="rect"
@@ -219,6 +219,11 @@ class Pokeentry extends React.Component {
     return (
       <div className="pokedex-container" style={{ padding: 15 }}>
         <Card className={classes.card} id={id}>
+          <Link to="/">
+            <IconButton aria-label="back" className={classes.link}>
+              <ArrowBackIcon />
+            </IconButton>
+          </Link>
           <CardActionArea className={classes.cardContent}>
             <CardMedia
               className={classes.img}
@@ -267,13 +272,6 @@ class Pokeentry extends React.Component {
               </Breadcrumbs>
             </CardContent>
           </CardActionArea>
-          <CardActions>
-            <Button size="small">
-              <Link className={classes.link} to="/">
-                Back
-              </Link>
-            </Button>
-          </CardActions>
         </Card>
       </div>
     );

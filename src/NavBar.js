@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "@reach/router";
+import { Link, navigate } from "@reach/router";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -7,6 +7,8 @@ import Typography from "@material-ui/core/Typography";
 import { fade, withStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
+import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 const styles = theme => ({
   link: {
@@ -51,6 +53,12 @@ const styles = theme => ({
 });
 
 class NavBar extends React.Component {
+  select(e) {
+    if (e.target.value) {
+      window.location = `/${e.target.value}`;
+    }
+    console.log("hello");
+  }
   render() {
     const { classes } = this.props;
     return (
@@ -62,7 +70,26 @@ class NavBar extends React.Component {
             </Link>
           </Typography>
           <div className={classes.search}>
-            <div className={classes.searchIcon}>
+            <Autocomplete
+              id="combo-box-demo"
+              options={top100Films}
+              onSelect={this.select.bind(this)}
+              style={{ width: 300 }}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  label="Combo box"
+                  variant="outlined"
+                  fullWidth
+                />
+              )}
+              renderOption={option => (
+                <Link className={classes.link} to={`/${option}`}>
+                  {option}
+                </Link>
+              )}
+            />
+            {/* <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
             <InputBase
@@ -72,12 +99,14 @@ class NavBar extends React.Component {
                 input: classes.inputInput
               }}
               inputProps={{ "aria-label": "search" }}
-            />
+            /> */}
           </div>
         </Toolbar>
       </AppBar>
     );
   }
 }
+
+const top100Films = require("./Pokemap").pokeNames();
 
 export default withStyles(styles)(NavBar);
