@@ -54,10 +54,9 @@ const styles = theme => ({
 
 class NavBar extends React.Component {
   select(e) {
-    if (e.target.value) {
-      window.location = `/${e.target.value}`;
-    }
-    console.log("hello");
+    // if (e.target.value) {
+    //   window.location = `/${e.target.value}`;
+    // }
   }
   render() {
     const { classes } = this.props;

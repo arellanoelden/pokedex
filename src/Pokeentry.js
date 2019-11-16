@@ -56,17 +56,31 @@ class Pokeentry extends React.Component {
     const map = maps.objectMap();
     const colors = maps.typeColor();
     const id = isNaN(this.props.id) ? map[this.props.id] : this.props.id;
+    debugger;
     this.state = {
       loading: true,
       id,
       imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
-      colors
+      colors,
+      map
     };
     this.handlePokemon = this.handlePokemon.bind(this);
     this.setPokeInfo = this.setPokeInfo.bind(this);
   }
   componentDidMount() {
     this.setPokeInfo(this.state.id);
+    debugger;
+  }
+  componentDidUpdate(prevProps) {
+    const { pathname } = this.props.location;
+    const { pathname: prevPathname } = prevProps.location;
+    if (pathname !== prevPathname) {
+      const id = isNaN(this.props.id)
+        ? this.state.map[this.props.id]
+        : this.props.id;
+      this.handlePokemon(id);
+      return true;
+    }
   }
   setPokeInfo = id => {
     fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`)
@@ -114,16 +128,16 @@ class Pokeentry extends React.Component {
             let chainId = 0;
             if (chains) {
               // starting ID not given
-              const index = response.chain.species.url.split("/");
+              let index = response.chain.species.url.split("/");
               chainId = index[index.length - 2];
-
               chain.push({
                 name: response.chain.species.name,
                 url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${chainId}.png`,
                 pokeId: chainId
               });
               while (chains[0] && chains[0].evolves_to) {
-                chainId++;
+                index = chains[0].species.url.split("/");
+                chainId = index[index.length - 2];
                 chain.push({
                   name: chains[0].species.name,
                   url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${chainId}.png`,
@@ -233,7 +247,7 @@ class Pokeentry extends React.Component {
             />
             <CardContent>
               <Typography gutterBottom variant="h5" component="h2">
-                {name}
+                {name.charAt(0).toUpperCase() + name.slice(1)}
               </Typography>
               <Typography variant="body2" color="textSecondary" component="p">
                 {description}
