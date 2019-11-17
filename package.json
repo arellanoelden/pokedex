@@ -17,7 +17,6 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://arellanoelden.github.io/pokedex/",
   "keywords": [],
   "author": "",
   "license": "ISC",
