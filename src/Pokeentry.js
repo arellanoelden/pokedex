@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "@reach/router";
+import { Link, navigate } from "@reach/router";
 import Button from "@material-ui/core/Button";
 import {
   Card,
@@ -56,7 +56,6 @@ class Pokeentry extends React.Component {
     const map = maps.objectMap();
     const colors = maps.typeColor();
     const id = isNaN(this.props.id) ? map[this.props.id] : this.props.id;
-    debugger;
     this.state = {
       loading: true,
       id,
@@ -65,16 +64,16 @@ class Pokeentry extends React.Component {
       map
     };
     this.handlePokemon = this.handlePokemon.bind(this);
+    this.redirect = this.redirect.bind(this);
     this.setPokeInfo = this.setPokeInfo.bind(this);
   }
   componentDidMount() {
     this.setPokeInfo(this.state.id);
-    debugger;
   }
   componentDidUpdate(prevProps) {
     const { pathname } = this.props.location;
     const { pathname: prevPathname } = prevProps.location;
-    if (pathname !== prevPathname) {
+    if (pathname && pathname !== prevPathname) {
       const id = isNaN(this.props.id)
         ? this.state.map[this.props.id]
         : this.props.id;
@@ -154,12 +153,16 @@ class Pokeentry extends React.Component {
       });
   };
   handlePokemon = id => {
+    this.setState({
+      id,
+      imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
+    });
+    this.setPokeInfo(id);
+  };
+  redirect = id => {
     return () => {
-      this.setState({
-        id,
-        imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
-      });
-      this.setPokeInfo(id);
+      navigate(`${id}`);
+      this.handlePokemon(id);
     };
   };
   render() {
@@ -274,7 +277,7 @@ class Pokeentry extends React.Component {
                         <div
                           key={index}
                           role="link"
-                          onClick={this.handlePokemon(evolution.pokeId)}
+                          onClick={this.redirect(evolution.pokeId)}
                           className={classes.breadcrumbs}
                         >
                           <img src={evolution.url} alt={evolution.name} />

@@ -13,7 +13,14 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 const styles = theme => ({
   link: {
     textDecoration: "none",
-    color: "white"
+    color: "white",
+    marginRight: "0.5rem"
+  },
+  option: {
+    width: "100%"
+  },
+  autocomplete: {
+    backgroundColor: theme.palette.secondary.main
   },
   search: {
     position: "relative",
@@ -40,7 +47,7 @@ const styles = theme => ({
     justifyContent: "center"
   },
   inputRoot: {
-    color: "inherit"
+    color: "white"
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 7),
@@ -49,20 +56,25 @@ const styles = theme => ({
     [theme.breakpoints.up("md")]: {
       width: 200
     }
+  },
+  toolbar: {
+    paddingTop: "0.5rem",
+    paddingBottom: "0.5rem",
+    justifyContent: "space-between"
   }
 });
 
 class NavBar extends React.Component {
   select(e) {
-    // if (e.target.value) {
-    //   window.location = `/${e.target.value}`;
-    // }
+    if (e && e.target.textContent) {
+      navigate(`/${e.target.textContent}`);
+    }
   }
   render() {
     const { classes } = this.props;
     return (
       <AppBar position="sticky" color="primary">
-        <Toolbar variant="dense">
+        <Toolbar variant="dense" className={classes.toolbar}>
           <Typography variant="h6" color="inherit">
             <Link className={classes.link} to="/">
               Pokedex
@@ -72,24 +84,25 @@ class NavBar extends React.Component {
             <Autocomplete
               id="combo-box-demo"
               options={top100Films}
-              onSelect={this.select.bind(this)}
               style={{ width: 300 }}
               renderInput={params => (
                 <TextField
                   {...params}
-                  label="Combo box"
+                  placeholder="Search"
                   variant="outlined"
+                  className={classes.link}
+                  onSubmit={this.select.bind(this)}
                   fullWidth
                 />
               )}
               renderOption={option => (
-                <Link className={classes.link} to={`/${option}`}>
+                <p className={classes.option} onClick={this.select.bind(this)}>
                   {option}
-                </Link>
+                </p>
               )}
             />
             {/* <div className={classes.searchIcon}>
-              <SearchIcon />
+              <SearchIcon onClick={this.select.bind(this)} />
             </div>
             <InputBase
               placeholder="Search…"
