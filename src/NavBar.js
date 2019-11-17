@@ -14,7 +14,7 @@ const styles = theme => ({
   link: {
     textDecoration: "none",
     color: "white",
-    marginRight: "0.5rem"
+    marginRight: "1rem"
   },
   option: {
     width: "100%"
@@ -88,7 +88,7 @@ class NavBar extends React.Component {
             <Autocomplete
               id="combo-box-demo"
               options={top100Films}
-              style={{ width: 300 }}
+              style={{ minWidth: 300 }}
               onInputChange={this.select.bind(this)}
               renderInput={params => (
                 <TextField
