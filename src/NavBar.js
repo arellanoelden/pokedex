@@ -65,8 +65,12 @@ const styles = theme => ({
 });
 
 class NavBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.map = require("./Pokemap").objectMap();
+  }
   select(e) {
-    if (e && e.target.textContent) {
+    if (e && e.target.textContent && this.map[e.target.textContent]) {
       navigate(`/${e.target.textContent}`);
     }
   }
@@ -85,6 +89,7 @@ class NavBar extends React.Component {
               id="combo-box-demo"
               options={top100Films}
               style={{ width: 300 }}
+              onInputChange={this.select.bind(this)}
               renderInput={params => (
                 <TextField
                   {...params}
