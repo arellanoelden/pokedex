@@ -134,6 +134,18 @@ class Pokeentry extends React.Component {
                 url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${chainId}.png`,
                 pokeId: chainId
               });
+              if (chains[1]) {
+                chains.forEach(currentChain => {
+                  index = currentChain.species.url.split("/");
+                  chainId = index[index.length - 2];
+                  chain.push({
+                    name: currentChain.species.name,
+                    url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${chainId}.png`,
+                    pokeId: chainId
+                  });
+                  chains = [];
+                });
+              }
               while (chains[0] && chains[0].evolves_to) {
                 index = chains[0].species.url.split("/");
                 chainId = index[index.length - 2];
@@ -168,69 +180,7 @@ class Pokeentry extends React.Component {
   render() {
     const { classes } = this.props;
     if (this.state.loading) {
-      return (
-        <div className="pokedex-container" style={{ padding: 15 }}>
-          <Card className={classes.card}>
-            <CardActionArea className={classes.cardContent}>
-              <Skeleton
-                variant="rect"
-                width="35%"
-                height={400}
-                className={classes.skeleton}
-              />
-              <CardContent style={{ width: "70%" }}>
-                <Skeleton variant="rect" width="30%" />
-                <br />
-                <Skeleton variant="rect" width="100%" />
-                <br />
-                <Skeleton variant="rect" width="80%" />
-                <br />
-                <div style={{ display: "flex", marginBottom: "1rem" }}>
-                  <Skeleton
-                    style={{ marginRight: "0.5rem" }}
-                    variant="rect"
-                    width={50}
-                    height={20}
-                  />
-                  <Skeleton
-                    style={{ marginRight: "0.5rem" }}
-                    variant="rect"
-                    width={50}
-                    height={20}
-                  />
-                </div>
-                <div style={{ display: "flex" }}>
-                  <Skeleton
-                    style={{ marginRight: "1rem" }}
-                    variant="circle"
-                    width={40}
-                    height={40}
-                  />
-                  <Skeleton
-                    style={{ marginRight: "1rem" }}
-                    variant="circle"
-                    width={40}
-                    height={40}
-                  />
-                  <Skeleton
-                    style={{ marginRight: "1rem" }}
-                    variant="circle"
-                    width={40}
-                    height={40}
-                  />
-                </div>
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-              <Button size="small">
-                <Link className={classes.link} to="/">
-                  Back
-                </Link>
-              </Button>
-            </CardActions>
-          </Card>
-        </div>
-      );
+      return <PokeEntrySkeleton classObject={classes} />;
     }
     const { name, imageUrl, id, types, description, colors } = this.state;
     return (
@@ -270,7 +220,7 @@ class Pokeentry extends React.Component {
                   />
                 );
               })}
-              <Breadcrumbs separator="" aria-label="breadcrumb">
+              <Breadcrumbs separator="" maxItems="10" aria-label="breadcrumb">
                 {this.state.chain
                   ? this.state.chain.map((evolution, index) => {
                       return (
@@ -295,4 +245,63 @@ class Pokeentry extends React.Component {
   }
 }
 
+const PokeEntrySkeleton = classObject => {
+  const classes = classObject.classObject;
+  return (
+    <div className="pokedex-container" style={{ padding: 15 }}>
+      <Card className={classes.card}>
+        <Link to="/">
+          <IconButton aria-label="back" className={classes.link}>
+            <ArrowBackIcon />
+          </IconButton>
+        </Link>
+        <CardActionArea className={classes.cardContent}>
+          <Skeleton variant="rect" height={400} className={classes.img} />
+          <CardContent style={{ width: "70%" }}>
+            <Skeleton variant="rect" width="30%" />
+            <br />
+            <Skeleton variant="rect" width="100%" />
+            <br />
+            <Skeleton variant="rect" width="80%" />
+            <br />
+            <div style={{ display: "flex", marginBottom: "1rem" }}>
+              <Skeleton
+                style={{ marginRight: "0.5rem" }}
+                variant="rect"
+                width={50}
+                height={20}
+              />
+              <Skeleton
+                style={{ marginRight: "0.5rem" }}
+                variant="rect"
+                width={50}
+                height={20}
+              />
+            </div>
+            <div style={{ display: "flex" }}>
+              <Skeleton
+                style={{ marginRight: "1rem" }}
+                variant="circle"
+                width={40}
+                height={40}
+              />
+              <Skeleton
+                style={{ marginRight: "1rem" }}
+                variant="circle"
+                width={40}
+                height={40}
+              />
+              <Skeleton
+                style={{ marginRight: "1rem" }}
+                variant="circle"
+                width={40}
+                height={40}
+              />
+            </div>
+          </CardContent>
+        </CardActionArea>
+      </Card>
+    </div>
+  );
+};
 export default withStyles(styles)(Pokeentry);

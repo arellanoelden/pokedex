@@ -21,6 +21,9 @@ function App() {
           secondary: {
             main: prefersDarkMode ? grey[800] : cyan[300]
           },
+          third: {
+            main: "#FFF"
+          },
           type: prefersDarkMode ? "dark" : "light"
         }
       }),
