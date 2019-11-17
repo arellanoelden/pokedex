@@ -1,12 +1,10 @@
 import React from "react";
 import { Link, navigate } from "@reach/router";
-import Button from "@material-ui/core/Button";
 import {
   Card,
   CardActionArea,
   CardMedia,
-  CardContent,
-  CardActions
+  CardContent
 } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
@@ -35,7 +33,8 @@ const styles = theme => ({
   cardContent: {
     [theme.breakpoints.up("md")]: {
       display: "flex",
-      justifyContent: "flex-start"
+      justifyContent: "flex-start",
+      flexWrap: "wrap"
     }
   },
   card: {
@@ -46,6 +45,13 @@ const styles = theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center"
+  },
+  type: {
+    marginRight: 10,
+    marginTop: 10,
+    borderRadius: "0",
+    color: "#FFF",
+    width: "10rem"
   }
 });
 
@@ -56,13 +62,37 @@ class Pokeentry extends React.Component {
     const map = maps.objectMap();
     const colors = maps.typeColor();
     const id = isNaN(this.props.id) ? map[this.props.id] : this.props.id;
+    this.typeMaps = maps.typeAdvantages();
+    const allTypes = [
+      { name: "bug", damage: 1 },
+      { name: "dark", damage: 1 },
+      { name: "dragon", damage: 1 },
+      { name: "electric", damage: 1 },
+      { name: "fairy", damage: 1 },
+      { name: "fighting", damage: 1 },
+      { name: "fire", damage: 1 },
+      { name: "flying", damage: 1 },
+      { name: "ghost", damage: 1 },
+      { name: "grass", damage: 1 },
+      { name: "ground", damage: 1 },
+      { name: "ice", damage: 1 },
+      { name: "normal", damage: 1 },
+      { name: "poison", damage: 1 },
+      { name: "psychic", damage: 1 },
+      { name: "rock", damage: 1 },
+      { name: "steel", damage: 1 },
+      { name: "water", damage: 1 }
+    ];
+
     this.state = {
       loading: true,
       id,
       imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
       colors,
-      map
+      map,
+      allTypes
     };
+
     this.handlePokemon = this.handlePokemon.bind(this);
     this.redirect = this.redirect.bind(this);
     this.setPokeInfo = this.setPokeInfo.bind(this);
@@ -87,19 +117,24 @@ class Pokeentry extends React.Component {
       .then(response => {
         let name = response.name;
         let types = response.types;
+        const allTypes = this.state.allTypes;
+        // calculate type advantages
         types.forEach(type => {
-          const typeUrl = type.type.url;
-          fetch(typeUrl)
-            .then(res => res.json())
-            .then(response => {
-              console.log(response);
-            });
-          console.log(type.type.url);
+          allTypes.forEach(currentType => {
+            currentType.damage *= this.typeMaps[type.type.name][
+              currentType.name
+            ];
+          });
         });
+        allTypes.sort((a, b) => {
+          return b.damage - a.damage;
+        });
+
         this.setState({
           name,
           types,
-          loading: false
+          loading: false,
+          allTypes
         });
       })
       .catch(error => console.error("Error:", error));
@@ -182,7 +217,15 @@ class Pokeentry extends React.Component {
     if (this.state.loading) {
       return <PokeEntrySkeleton classObject={classes} />;
     }
-    const { name, imageUrl, id, types, description, colors } = this.state;
+    const {
+      name,
+      imageUrl,
+      id,
+      types,
+      description,
+      colors,
+      allTypes
+    } = this.state;
     return (
       <div className="pokedex-container" style={{ padding: 15 }}>
         <Card className={classes.card} id={id}>
@@ -191,52 +234,104 @@ class Pokeentry extends React.Component {
               <ArrowBackIcon />
             </IconButton>
           </Link>
-          <CardActionArea className={classes.cardContent}>
-            <CardMedia
-              className={classes.img}
-              component="img"
-              image={imageUrl}
-              alt={name}
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                {name.charAt(0).toUpperCase() + name.slice(1)}
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                {description}
-              </Typography>
-              {types.map((type, index) => {
-                const color = colors[type.type.name];
-                return (
-                  <Chip
-                    key={index}
-                    style={{
-                      marginRight: 10,
-                      marginTop: 10,
-                      backgroundColor: color,
-                      color: "#FFF"
-                    }}
-                    label={type.type.name}
-                  />
-                );
-              })}
-              <Breadcrumbs separator="" maxItems="10" aria-label="breadcrumb">
-                {this.state.chain
-                  ? this.state.chain.map((evolution, index) => {
-                      return (
-                        <div
-                          key={index}
-                          role="link"
-                          onClick={this.redirect(evolution.pokeId)}
-                          className={classes.breadcrumbs}
-                        >
-                          <img src={evolution.url} alt={evolution.name} />
-                          {evolution.name}
-                        </div>
-                      );
-                    })
-                  : ""}
-              </Breadcrumbs>
+          <CardActionArea>
+            <CardContent className={classes.cardContent}>
+              <CardMedia
+                className={classes.img}
+                component="img"
+                image={imageUrl}
+                alt={name}
+              />
+              <div
+                style={{
+                  flex: "1",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center"
+                }}
+              >
+                <Typography gutterBottom variant="h5" component="h2">
+                  {name.charAt(0).toUpperCase() + name.slice(1)}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  {description}
+                </Typography>
+                <section>
+                  {types.map((type, index) => {
+                    const color = colors[type.type.name];
+                    return (
+                      <Chip
+                        key={index}
+                        className={classes.type}
+                        style={{
+                          backgroundColor: color
+                        }}
+                        label={type.type.name}
+                      />
+                    );
+                  })}
+                </section>
+                <h2>Evolutions: </h2>
+                <Breadcrumbs separator="" maxItems={10} aria-label="breadcrumb">
+                  {this.state.chain
+                    ? this.state.chain.map((evolution, index) => {
+                        return (
+                          <div
+                            key={index}
+                            role="link"
+                            onClick={this.redirect(evolution.pokeId)}
+                            className={classes.breadcrumbs}
+                          >
+                            <img src={evolution.url} alt={evolution.name} />
+                            {evolution.name}
+                          </div>
+                        );
+                      })
+                    : ""}
+                </Breadcrumbs>
+              </div>
+              <div
+                className="types"
+                style={{
+                  width: "100%"
+                }}
+              >
+                <h3>Damage when attacked</h3>
+                <div
+                  className="typesContainer"
+                  style={{
+                    width: "100%",
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gridTemplateRows: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
+                    gridAutoFlow: "column"
+                  }}
+                >
+                  {allTypes.map(type => {
+                    return (
+                      <div
+                        key={type.name}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          minWidth: "40%"
+                        }}
+                      >
+                        <Chip
+                          className={classes.type}
+                          style={{
+                            backgroundColor: colors[type.name]
+                          }}
+                          label={type.name}
+                        />
+                        <span style={{ width: "1rem", paddingTop: 10 }}>
+                          {type.damage}x
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </CardContent>
           </CardActionArea>
         </Card>
@@ -304,4 +399,5 @@ const PokeEntrySkeleton = classObject => {
     </div>
   );
 };
+
 export default withStyles(styles)(Pokeentry);

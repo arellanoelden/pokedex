@@ -5,8 +5,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 
 import { fade, withStyles } from "@material-ui/core/styles";
-import SearchIcon from "@material-ui/icons/Search";
-import InputBase from "@material-ui/core/InputBase";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
@@ -106,17 +104,6 @@ class NavBar extends React.Component {
                 </p>
               )}
             />
-            {/* <div className={classes.searchIcon}>
-              <SearchIcon onClick={this.select.bind(this)} />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput
-              }}
-              inputProps={{ "aria-label": "search" }}
-            /> */}
           </div>
         </Toolbar>
       </AppBar>
