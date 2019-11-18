@@ -125,7 +125,26 @@ class Pokeentry extends React.Component {
       .then(response => {
         let name = response.name;
         let types = response.types;
-        const allTypes = this.state.allTypes;
+        const allTypes = [
+          { name: "bug", damage: 1 },
+          { name: "dark", damage: 1 },
+          { name: "dragon", damage: 1 },
+          { name: "electric", damage: 1 },
+          { name: "fairy", damage: 1 },
+          { name: "fighting", damage: 1 },
+          { name: "fire", damage: 1 },
+          { name: "flying", damage: 1 },
+          { name: "ghost", damage: 1 },
+          { name: "grass", damage: 1 },
+          { name: "ground", damage: 1 },
+          { name: "ice", damage: 1 },
+          { name: "normal", damage: 1 },
+          { name: "poison", damage: 1 },
+          { name: "psychic", damage: 1 },
+          { name: "rock", damage: 1 },
+          { name: "steel", damage: 1 },
+          { name: "water", damage: 1 }
+        ];
         // calculate type advantages
         types.forEach(type => {
           allTypes.forEach(currentType => {
