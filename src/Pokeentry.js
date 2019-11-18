@@ -23,11 +23,18 @@ const styles = theme => ({
     width: "80%",
     marginLeft: "10%",
     [theme.breakpoints.up("md")]: {
-      width: "50%",
+      width: "30%",
       marginLeft: "0%"
-    },
-    [theme.breakpoints.up("lg")]: {
-      width: "30%"
+    }
+  },
+  skeletonImg: {
+    width: "80%",
+    height: 360,
+    marginLeft: "10%",
+    [theme.breakpoints.up("md")]: {
+      height: 370,
+      width: "30%",
+      marginLeft: "0%"
     }
   },
   cardContent: {
@@ -133,7 +140,7 @@ class Pokeentry extends React.Component {
         this.setState({
           name,
           types,
-          loading: false,
+          loading: true,
           allTypes
         });
       })
@@ -214,18 +221,11 @@ class Pokeentry extends React.Component {
   };
   render() {
     const { classes } = this.props;
+    const { colors, allTypes } = this.state;
     if (this.state.loading) {
-      return <PokeEntrySkeleton classObject={classes} />;
+      return <PokeEntrySkeleton classes={classes} allTypes={allTypes} />;
     }
-    const {
-      name,
-      imageUrl,
-      id,
-      types,
-      description,
-      colors,
-      allTypes
-    } = this.state;
+    const { name, imageUrl, id, types, description } = this.state;
     return (
       <div className="pokedex-container" style={{ padding: 15 }}>
         <Card className={classes.card} id={id}>
@@ -340,8 +340,9 @@ class Pokeentry extends React.Component {
   }
 }
 
-const PokeEntrySkeleton = classObject => {
-  const classes = classObject.classObject;
+const PokeEntrySkeleton = props => {
+  const classes = props.classes;
+  const allTypes = props.allTypes;
   return (
     <div className="pokedex-container" style={{ padding: 15 }}>
       <Card className={classes.card}>
@@ -350,48 +351,95 @@ const PokeEntrySkeleton = classObject => {
             <ArrowBackIcon />
           </IconButton>
         </Link>
-        <CardActionArea className={classes.cardContent}>
-          <Skeleton variant="rect" height={400} className={classes.img} />
-          <CardContent style={{ width: "70%" }}>
-            <Skeleton variant="rect" width="30%" />
-            <br />
-            <Skeleton variant="rect" width="100%" />
-            <br />
-            <Skeleton variant="rect" width="80%" />
-            <br />
-            <div style={{ display: "flex", marginBottom: "1rem" }}>
-              <Skeleton
-                style={{ marginRight: "0.5rem" }}
-                variant="rect"
-                width={50}
-                height={20}
-              />
-              <Skeleton
-                style={{ marginRight: "0.5rem" }}
-                variant="rect"
-                width={50}
-                height={20}
-              />
+        <CardActionArea>
+          <CardContent className={classes.cardContent}>
+            <Skeleton
+              variant="rect"
+              className={(classes.img, classes.skeletonImg)}
+              style={{ marginRight: "1rem", marginBottom: "1rem" }}
+            />
+            <div
+              style={{
+                flex: "1",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center"
+              }}
+            >
+              <Skeleton variant="rect" width="30%" />
+              <br />
+              <Skeleton variant="rect" width="100%" />
+              <br />
+              <Skeleton variant="rect" width="80%" />
+              <br />
+              <div style={{ display: "flex", marginBottom: "1rem" }}>
+                <Skeleton
+                  style={{ marginRight: "0.5rem" }}
+                  variant="rect"
+                  width="8rem"
+                  height={30}
+                />
+                <Skeleton
+                  style={{ marginRight: "0.5rem" }}
+                  variant="rect"
+                  width="8rem"
+                  height={30}
+                />
+              </div>
+              <div style={{ display: "flex" }}>
+                <Skeleton
+                  style={{ marginRight: "1rem" }}
+                  variant="circle"
+                  width={40}
+                  height={40}
+                />
+                <Skeleton
+                  style={{ marginRight: "1rem" }}
+                  variant="circle"
+                  width={40}
+                  height={40}
+                />
+                <Skeleton
+                  style={{ marginRight: "1rem" }}
+                  variant="circle"
+                  width={40}
+                  height={40}
+                />
+              </div>
             </div>
-            <div style={{ display: "flex" }}>
-              <Skeleton
-                style={{ marginRight: "1rem" }}
-                variant="circle"
-                width={40}
-                height={40}
-              />
-              <Skeleton
-                style={{ marginRight: "1rem" }}
-                variant="circle"
-                width={40}
-                height={40}
-              />
-              <Skeleton
-                style={{ marginRight: "1rem" }}
-                variant="circle"
-                width={40}
-                height={40}
-              />
+            <div
+              className="types"
+              style={{
+                width: "100%"
+              }}
+            >
+              <h3>Damage when attacked</h3>
+              <div
+                className="typesContainer"
+                style={{
+                  width: "100%",
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gridTemplateRows: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
+                  gridAutoFlow: "column"
+                }}
+              >
+                {allTypes.map(type => {
+                  return (
+                    <div
+                      key={type.name}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        minWidth: "40%"
+                      }}
+                    >
+                      <Chip className={classes.type} label={type.name} />
+                      <span style={{ width: "1rem", paddingTop: 10 }}>--</span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </CardContent>
         </CardActionArea>
