@@ -85,7 +85,7 @@ class NavBar extends React.Component {
           <div className={classes.search}>
             <Autocomplete
               id="combo-box-demo"
-              options={top100Films}
+              options={pokeNames}
               style={{ minWidth: 300 }}
               onInputChange={this.select.bind(this)}
               renderInput={params => (
@@ -111,6 +111,6 @@ class NavBar extends React.Component {
   }
 }
 
-const top100Films = require("./Pokemap").pokeNames();
+const pokeNames = require("./Pokemap").pokeNames();
 
 export default withStyles(styles)(NavBar);
