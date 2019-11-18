@@ -140,7 +140,7 @@ class Pokeentry extends React.Component {
         this.setState({
           name,
           types,
-          loading: true,
+          loading: false,
           allTypes
         });
       })
