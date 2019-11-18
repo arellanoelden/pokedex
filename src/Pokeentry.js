@@ -65,7 +65,7 @@ const styles = theme => ({
 class Pokeentry extends React.Component {
   constructor(props) {
     super(props);
-    window.scrollTo(70, 70);
+    window.scrollTo(0, 0);
     const maps = require("./Pokemap.js");
     const map = maps.objectMap();
     const colors = maps.typeColor();
