@@ -65,6 +65,7 @@ const styles = theme => ({
 class Pokeentry extends React.Component {
   constructor(props) {
     super(props);
+    window.scrollTo(70, 70);
     const maps = require("./Pokemap.js");
     const map = maps.objectMap();
     const colors = maps.typeColor();
@@ -234,106 +235,104 @@ class Pokeentry extends React.Component {
               <ArrowBackIcon />
             </IconButton>
           </Link>
-          <CardActionArea>
-            <CardContent className={classes.cardContent}>
-              <CardMedia
-                className={classes.img}
-                component="img"
-                image={imageUrl}
-                alt={name}
-              />
+          <CardContent className={classes.cardContent}>
+            <CardMedia
+              className={classes.img}
+              component="img"
+              image={imageUrl}
+              alt={name}
+            />
+            <div
+              style={{
+                flex: "1",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center"
+              }}
+            >
+              <Typography gutterBottom variant="h5" component="h2">
+                {name.charAt(0).toUpperCase() + name.slice(1)}
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p">
+                {description}
+              </Typography>
+              <section>
+                {types.map((type, index) => {
+                  const color = colors[type.type.name];
+                  return (
+                    <Chip
+                      key={index}
+                      className={classes.type}
+                      style={{
+                        backgroundColor: color
+                      }}
+                      label={type.type.name}
+                    />
+                  );
+                })}
+              </section>
+              <h2>Evolutions: </h2>
+              <Breadcrumbs separator="" maxItems={10} aria-label="breadcrumb">
+                {this.state.chain
+                  ? this.state.chain.map((evolution, index) => {
+                      return (
+                        <div
+                          key={index}
+                          role="link"
+                          onClick={this.redirect(evolution.pokeId)}
+                          className={classes.breadcrumbs}
+                        >
+                          <img src={evolution.url} alt={evolution.name} />
+                          {evolution.name}
+                        </div>
+                      );
+                    })
+                  : ""}
+              </Breadcrumbs>
+            </div>
+            <div
+              className="types"
+              style={{
+                width: "100%"
+              }}
+            >
+              <h3>Damage when attacked</h3>
               <div
+                className="typesContainer"
                 style={{
-                  flex: "1",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center"
+                  width: "100%",
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gridTemplateRows: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
+                  gridAutoFlow: "column"
                 }}
               >
-                <Typography gutterBottom variant="h5" component="h2">
-                  {name.charAt(0).toUpperCase() + name.slice(1)}
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  {description}
-                </Typography>
-                <section>
-                  {types.map((type, index) => {
-                    const color = colors[type.type.name];
-                    return (
+                {allTypes.map(type => {
+                  return (
+                    <div
+                      key={type.name}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        minWidth: "40%"
+                      }}
+                    >
                       <Chip
-                        key={index}
                         className={classes.type}
                         style={{
-                          backgroundColor: color
+                          backgroundColor: colors[type.name]
                         }}
-                        label={type.type.name}
+                        label={type.name}
                       />
-                    );
-                  })}
-                </section>
-                <h2>Evolutions: </h2>
-                <Breadcrumbs separator="" maxItems={10} aria-label="breadcrumb">
-                  {this.state.chain
-                    ? this.state.chain.map((evolution, index) => {
-                        return (
-                          <div
-                            key={index}
-                            role="link"
-                            onClick={this.redirect(evolution.pokeId)}
-                            className={classes.breadcrumbs}
-                          >
-                            <img src={evolution.url} alt={evolution.name} />
-                            {evolution.name}
-                          </div>
-                        );
-                      })
-                    : ""}
-                </Breadcrumbs>
+                      <span style={{ width: "1rem", paddingTop: 10 }}>
+                        {type.damage}x
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
-              <div
-                className="types"
-                style={{
-                  width: "100%"
-                }}
-              >
-                <h3>Damage when attacked</h3>
-                <div
-                  className="typesContainer"
-                  style={{
-                    width: "100%",
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gridTemplateRows: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
-                    gridAutoFlow: "column"
-                  }}
-                >
-                  {allTypes.map(type => {
-                    return (
-                      <div
-                        key={type.name}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          minWidth: "40%"
-                        }}
-                      >
-                        <Chip
-                          className={classes.type}
-                          style={{
-                            backgroundColor: colors[type.name]
-                          }}
-                          label={type.name}
-                        />
-                        <span style={{ width: "1rem", paddingTop: 10 }}>
-                          {type.damage}x
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </CardContent>
-          </CardActionArea>
+            </div>
+          </CardContent>
         </Card>
       </div>
     );
