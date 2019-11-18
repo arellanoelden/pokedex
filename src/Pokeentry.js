@@ -58,7 +58,10 @@ const styles = theme => ({
     marginTop: 10,
     borderRadius: "0",
     color: "#FFF",
-    width: "10rem"
+    width: "10rem",
+    [theme.breakpoints.down("sm")]: {
+      width: "7.5rem"
+    }
   }
 });
 

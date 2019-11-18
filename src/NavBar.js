@@ -11,8 +11,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 const styles = theme => ({
   link: {
     textDecoration: "none",
-    color: "white",
-    marginRight: "1rem"
+    color: "white"
   },
   option: {
     width: "100%"
@@ -27,9 +26,7 @@ const styles = theme => ({
     "&:hover": {
       backgroundColor: fade(theme.palette.common.white, 0.25)
     },
-    marginRight: theme.spacing(2),
     marginLeft: 0,
-    width: "100%",
     [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(3),
       width: "auto"
@@ -75,7 +72,7 @@ class NavBar extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <AppBar position="sticky" color="primary">
+      <AppBar color="primary">
         <Toolbar variant="dense" className={classes.toolbar}>
           <Typography variant="h6" color="inherit">
             <Link className={classes.link} to="/">
@@ -86,16 +83,16 @@ class NavBar extends React.Component {
             <Autocomplete
               id="combo-box-demo"
               options={pokeNames}
-              style={{ minWidth: 300 }}
+              style={{ minWidth: 200 }}
               onInputChange={this.select.bind(this)}
               renderInput={params => (
                 <TextField
                   {...params}
                   placeholder="Search"
                   variant="outlined"
+                  style={{ minWidth: 200 }}
                   className={classes.link}
                   onSubmit={this.select.bind(this)}
-                  fullWidth
                 />
               )}
               renderOption={option => (
