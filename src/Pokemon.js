@@ -19,7 +19,14 @@ const styles = theme => ({
     textAlign: "center"
   },
   skeleton: {
-    marginBottom: "0.75rem"
+    marginBottom: "0.75rem",
+    height: 395,
+    [theme.breakpoints.up("md")]: {
+      height: 350
+    },
+    [theme.breakpoints.up("xl")]: {
+      height: 400
+    }
   },
   card: {
     backgroundColor: theme.palette.secondary.main,
@@ -66,7 +73,6 @@ class Pokedex extends React.Component {
                   <Skeleton
                     variant="rect"
                     width="100%"
-                    height={300}
                     className={classes.skeleton}
                   />
                   <Skeleton variant="rect" width="100%" />
