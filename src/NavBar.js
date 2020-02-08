@@ -1,12 +1,11 @@
 import React from "react";
-import { Link, navigate } from "@reach/router";
+import { Link } from "@reach/router";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 
-import { fade, withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 
 const styles = theme => ({
   link: {
@@ -20,12 +19,6 @@ const styles = theme => ({
     backgroundColor: theme.palette.secondary.main
   },
   search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25)
-    },
     marginLeft: 0,
     [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(3),
@@ -63,10 +56,15 @@ class NavBar extends React.Component {
   constructor(props) {
     super(props);
     this.map = require("./Pokemap").objectMap();
+    this.filter = this.filter.bind(this);
   }
-  select(e) {
-    if (e && e.target.textContent && this.map[e.target.textContent]) {
-      navigate(`/${e.target.textContent}`);
+  filter(e) {
+    if (e && e.target.value !== null) {
+      let pokeIdsFiltered = pokeNames
+        .filter(pokemon => pokemon.includes(e.target.value))
+        .map(pokemon => this.map[pokemon]);
+      console.log(pokeIdsFiltered);
+      this.props.setIds(pokeIdsFiltered);
     }
   }
   render() {
@@ -80,26 +78,11 @@ class NavBar extends React.Component {
             </Link>
           </Typography>
           <div className={classes.search}>
-            <Autocomplete
-              id="combo-box-demo"
-              options={pokeNames}
-              style={{ minWidth: 200 }}
-              onInputChange={this.select.bind(this)}
-              renderInput={params => (
-                <TextField
-                  {...params}
-                  placeholder="Search"
-                  variant="outlined"
-                  style={{ minWidth: 200 }}
-                  className={classes.link}
-                  onSubmit={this.select.bind(this)}
-                />
-              )}
-              renderOption={option => (
-                <p className={classes.option} onClick={this.select.bind(this)}>
-                  {option}
-                </p>
-              )}
+            <TextField
+              id="filled-basic"
+              label="Search"
+              variant="filled"
+              onChange={this.filter}
             />
           </div>
         </Toolbar>

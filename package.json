@@ -44,8 +44,21 @@
     "@material-ui/lab": "^4.0.0-alpha.31",
     "@material-ui/styles": "^4.5.2",
     "@reach/router": "^1.2.1",
+    "gulp": "^4.0.2",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-lazyload": "^2.6.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

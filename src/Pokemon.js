@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "@reach/router";
 import {
   Card,
   CardActionArea,
@@ -16,11 +15,12 @@ const styles = theme => ({
     color: "white"
   },
   header: {
-    textAlign: "center"
+    textAlign: "center",
+    fontSize: "1rem"
   },
   skeleton: {
     marginBottom: "0.75rem",
-    height: 395,
+    height: 75,
     [theme.breakpoints.up("md")]: {
       height: 350
     },
@@ -55,42 +55,39 @@ class Pokedex extends React.Component {
     });
   }
   render() {
-    const { classes } = this.props;
+    const { classes, setCurrentId } = this.props;
     const { name, id, imageUrl, loading } = this.state;
     return (
-      <Link className={classes.link} to={`/${id}`}>
-        <Card className={classes.card} id={`${id}`}>
-          <CardActionArea>
-            <CardMedia
-              component="img"
-              onLoad={this.handleImageLoaded.bind(this)}
-              image={imageUrl}
-              alt={name}
-            />
-            <CardContent>
-              {loading ? (
-                <React.Fragment>
-                  <Skeleton
-                    variant="rect"
-                    width="100%"
-                    className={classes.skeleton}
-                  />
-                  <Skeleton variant="rect" width="100%" />
-                </React.Fragment>
-              ) : (
-                <Typography
-                  className={classes.header}
-                  gutterBottom
-                  variant="h4"
-                  component="h2"
-                >
-                  {name.charAt(0).toUpperCase() + name.slice(1)}
-                </Typography>
-              )}
-            </CardContent>
-          </CardActionArea>
-        </Card>
-      </Link>
+      <Card className={classes.card} id={`${id}`}>
+        <CardActionArea onClick={() => setCurrentId(id)}>
+          <CardMedia
+            component="img"
+            onLoad={this.handleImageLoaded.bind(this)}
+            image={imageUrl}
+            alt={name}
+          />
+          <CardContent style={{ padding: 0 }}>
+            {loading ? (
+              <React.Fragment>
+                <Skeleton
+                  variant="rect"
+                  width="100%"
+                  className={classes.skeleton}
+                />
+                <Skeleton variant="rect" width="100%" />
+              </React.Fragment>
+            ) : (
+              <Typography
+                className={classes.header}
+                gutterBottom
+                component="h2"
+              >
+                {name.charAt(0).toUpperCase() + name.slice(1)}
+              </Typography>
+            )}
+          </CardContent>
+        </CardActionArea>
+      </Card>
     );
   }
 }

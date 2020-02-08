@@ -1,5 +1,4 @@
 import React from "react";
-import { Link, navigate } from "@reach/router";
 import {
   Card,
   CardActionArea,
@@ -17,7 +16,10 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 const styles = theme => ({
   link: {
     textDecoration: "none",
-    color: "white"
+    color: "white",
+    [theme.breakpoints.up("md")]: {
+      transform: "rotate(180deg)"
+    }
   },
   img: {
     width: "80%",
@@ -73,6 +75,7 @@ class Pokeentry extends React.Component {
     const map = maps.objectMap();
     const colors = maps.typeColor();
     const id = isNaN(this.props.id) ? map[this.props.id] : this.props.id;
+
     this.typeMaps = maps.typeAdvantages();
     const allTypes = [
       { name: "bug", damage: 1 },
@@ -98,7 +101,10 @@ class Pokeentry extends React.Component {
     this.state = {
       loading: true,
       id,
-      imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
+      imageUrl:
+        id > 0
+          ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
+          : "",
       colors,
       map,
       allTypes
@@ -109,12 +115,12 @@ class Pokeentry extends React.Component {
     this.setPokeInfo = this.setPokeInfo.bind(this);
   }
   componentDidMount() {
-    this.setPokeInfo(this.state.id);
+    if (this.state.id > 0) {
+      this.setPokeInfo(this.state.id);
+    }
   }
   componentDidUpdate(prevProps) {
-    const { pathname } = this.props.location;
-    const { pathname: prevPathname } = prevProps.location;
-    if (pathname && pathname !== prevPathname) {
+    if (this.props.id !== prevProps.id && this.props.id > 0) {
       const id = isNaN(this.props.id)
         ? this.state.map[this.props.id]
         : this.props.id;
@@ -238,25 +244,34 @@ class Pokeentry extends React.Component {
   };
   redirect = id => {
     return () => {
-      navigate(`${id}`);
+      this.setState({ id });
       this.handlePokemon(id);
     };
   };
   render() {
-    const { classes } = this.props;
+    const { classes, setCurrentId } = this.props;
     const { colors, allTypes } = this.state;
-    if (this.state.loading) {
-      return <PokeEntrySkeleton classes={classes} allTypes={allTypes} />;
-    }
     const { name, imageUrl, id, types, description } = this.state;
+
+    if (this.state.loading) {
+      return (
+        <PokeEntrySkeleton
+          classes={classes}
+          allTypes={allTypes}
+          setCurrentId={setCurrentId}
+        />
+      );
+    }
     return (
-      <div className="pokedex-container" style={{ padding: 15 }}>
+      <div className="pokemon-container">
         <Card className={classes.card} id={id}>
-          <Link to="/">
-            <IconButton aria-label="back" className={classes.link}>
-              <ArrowBackIcon />
-            </IconButton>
-          </Link>
+          <IconButton
+            aria-label="back"
+            onClick={() => setCurrentId(-1)}
+            className={classes.link}
+          >
+            <ArrowBackIcon />
+          </IconButton>
           <CardContent className={classes.cardContent}>
             <CardMedia
               className={classes.img}
@@ -293,6 +308,8 @@ class Pokeentry extends React.Component {
                   );
                 })}
               </section>
+            </div>
+            <div>
               <h2>Evolutions: </h2>
               <Breadcrumbs separator="" maxItems={10} aria-label="breadcrumb">
                 {this.state.chain
@@ -364,14 +381,17 @@ class Pokeentry extends React.Component {
 const PokeEntrySkeleton = props => {
   const classes = props.classes;
   const allTypes = props.allTypes;
+  const setCurrentId = props.setCurrentId;
   return (
     <div className="pokedex-container" style={{ padding: 15 }}>
       <Card className={classes.card}>
-        <Link to="/">
-          <IconButton aria-label="back" className={classes.link}>
-            <ArrowBackIcon />
-          </IconButton>
-        </Link>
+        <IconButton
+          aria-label="back"
+          onClick={() => setCurrentId(-1)}
+          className={classes.link}
+        >
+          <ArrowBackIcon />
+        </IconButton>
         <CardActionArea>
           <CardContent className={classes.cardContent}>
             <Skeleton

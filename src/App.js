@@ -1,11 +1,10 @@
 import React from "react";
 import { Router } from "@reach/router";
-import NavBar from "./NavBar";
 import Pokedex from "./Pokedex";
-import Pokeentry from "./Pokeentry";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { red, cyan, grey } from "@material-ui/core/colors";
 import "./styles/style.css";
+import "./styles/sprites.css";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 function App() {
@@ -32,13 +31,9 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <div>
-        <NavBar />
-        <Router>
-          <Pokedex path="/" />
-          <Pokeentry path="/:id" />
-        </Router>
-      </div>
+      <Router>
+        <Pokedex path="/" />
+      </Router>
     </ThemeProvider>
   );
 }
