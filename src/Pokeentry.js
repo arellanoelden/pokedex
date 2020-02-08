@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Card,
-  CardActionArea,
-  CardMedia,
-  CardContent
-} from "@material-ui/core";
+import { Card, CardActionArea, CardContent } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
@@ -101,10 +96,6 @@ class Pokeentry extends React.Component {
     this.state = {
       loading: true,
       id,
-      imageUrl:
-        id > 0
-          ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
-          : "",
       colors,
       map,
       allTypes
@@ -202,7 +193,6 @@ class Pokeentry extends React.Component {
               chainId = index[index.length - 2];
               chain.push({
                 name: response.chain.species.name,
-                url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${chainId}.png`,
                 pokeId: chainId
               });
               if (chains[1]) {
@@ -211,7 +201,6 @@ class Pokeentry extends React.Component {
                   chainId = index[index.length - 2];
                   chain.push({
                     name: currentChain.species.name,
-                    url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${chainId}.png`,
                     pokeId: chainId
                   });
                   chains = [];
@@ -222,7 +211,6 @@ class Pokeentry extends React.Component {
                 chainId = index[index.length - 2];
                 chain.push({
                   name: chains[0].species.name,
-                  url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${chainId}.png`,
                   pokeId: chainId
                 });
                 chains = chains[0].evolves_to;
@@ -237,8 +225,7 @@ class Pokeentry extends React.Component {
   };
   handlePokemon = id => {
     this.setState({
-      id,
-      imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
+      id
     });
     this.setPokeInfo(id);
   };
@@ -251,7 +238,7 @@ class Pokeentry extends React.Component {
   render() {
     const { classes, setCurrentId } = this.props;
     const { colors, allTypes } = this.state;
-    const { name, imageUrl, id, types, description } = this.state;
+    const { name, id, types, description } = this.state;
 
     if (this.state.loading) {
       return (
@@ -273,12 +260,7 @@ class Pokeentry extends React.Component {
             <ArrowBackIcon />
           </IconButton>
           <CardContent className={classes.cardContent}>
-            <CardMedia
-              className={classes.img}
-              component="img"
-              image={imageUrl}
-              alt={name}
-            />
+            <div className={`sprite sprite-${id}`} />
             <div
               style={{
                 flex: "1",
@@ -309,7 +291,7 @@ class Pokeentry extends React.Component {
                 })}
               </section>
             </div>
-            <div>
+            <div style={{ width: "100%" }}>
               <h2>Evolutions: </h2>
               <Breadcrumbs separator="" maxItems={10} aria-label="breadcrumb">
                 {this.state.chain
@@ -321,7 +303,11 @@ class Pokeentry extends React.Component {
                           onClick={this.redirect(evolution.pokeId)}
                           className={classes.breadcrumbs}
                         >
-                          <img src={evolution.url} alt={evolution.name} />
+                          <div
+                            className={`sprite breadcrumb sprite-${
+                              evolution.pokeId
+                            }`}
+                          />
                           {evolution.name}
                         </div>
                       );

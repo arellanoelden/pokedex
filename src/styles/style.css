@@ -19,6 +19,11 @@ body {
   }
 }
 
+.sprite {
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .pokedex-container {
   display: flex;
   flex-grow: 1;
@@ -39,6 +44,22 @@ body {
   overflow-y: scroll;
   overflow-x: hidden;
   background-color: #ef5350;
+}
+.pokedex-container .currentPokemon .sprite {
+  height: 10rem;
+}
+@media screen and (min-width: 960px) {
+  .pokedex-container .currentPokemon .sprite {
+    width: 25%;
+    margin-right: 2rem;
+  }
+}
+.pokedex-container .currentPokemon .MuiBreadcrumbs-li {
+  width: 30%;
+}
+.pokedex-container .currentPokemon .MuiBreadcrumbs-li .sprite.breadcrumb {
+  width: 5rem;
+  margin-right: 0;
 }
 @media screen and (min-width: 960px) {
   .pokedex-container .currentPokemon {

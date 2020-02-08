@@ -63,7 +63,6 @@ class NavBar extends React.Component {
       let pokeIdsFiltered = pokeNames
         .filter(pokemon => pokemon.includes(e.target.value))
         .map(pokemon => this.map[pokemon]);
-      console.log(pokeIdsFiltered);
       this.props.setIds(pokeIdsFiltered);
     }
   }

@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Card,
-  CardActionArea,
-  CardMedia,
-  CardContent
-} from "@material-ui/core";
+import { Card, CardActionArea, CardContent } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Skeleton from "@material-ui/lab/Skeleton";
@@ -37,35 +32,24 @@ const styles = theme => ({
 class Pokedex extends React.Component {
   state = {
     loading: true,
-    imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
-      this.props.id
-    }.png`,
     id: this.props.id
   };
   componentDidMount() {
     const nameMap = require("./Pokemap").objectMap();
     const name = nameMap[this.props.id];
     this.setState({
-      name
-    });
-  }
-  handleImageLoaded() {
-    this.setState({
+      name,
       loading: false
     });
   }
   render() {
     const { classes, setCurrentId } = this.props;
-    const { name, id, imageUrl, loading } = this.state;
+    const { name, id, loading } = this.state;
+
     return (
       <Card className={classes.card} id={`${id}`}>
         <CardActionArea onClick={() => setCurrentId(id)}>
-          <CardMedia
-            component="img"
-            onLoad={this.handleImageLoaded.bind(this)}
-            image={imageUrl}
-            alt={name}
-          />
+          <div style={{ height: "10rem" }} className={`sprite sprite-${id}`} />
           <CardContent style={{ padding: 0 }}>
             {loading ? (
               <React.Fragment>
@@ -82,7 +66,7 @@ class Pokedex extends React.Component {
                 gutterBottom
                 component="h2"
               >
-                {name.charAt(0).toUpperCase() + name.slice(1)}
+                {name ? name.charAt(0).toUpperCase() + name.slice(1) : ""}
               </Typography>
             )}
           </CardContent>

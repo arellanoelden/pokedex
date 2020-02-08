@@ -1,7 +1,6 @@
 import React from "react";
 import Pokemon from "./Pokemon";
 import Grid from "@material-ui/core/Grid";
-import LazyLoad from "react-lazyload";
 import Pokeentry from "./Pokeentry";
 import Navbar from "./NavBar";
 
@@ -12,13 +11,11 @@ class Pokedex extends React.Component {
     this.state = {
       currentId: -1,
       ids,
-      loading: true,
-      once: true
+      loading: true
     };
     this.setCurrentId = this.setCurrentId.bind(this);
     this.setIds = this.setIds.bind(this);
   }
-  callback() {}
   setCurrentId(currentId) {
     this.setState({ currentId });
   }
@@ -26,7 +23,7 @@ class Pokedex extends React.Component {
     this.setState({ ids });
   }
   render() {
-    const { currentId, ids, once } = this.state;
+    const { currentId, ids } = this.state;
     return (
       <React.Fragment>
         <Navbar setIds={this.setIds} />
@@ -39,11 +36,8 @@ class Pokedex extends React.Component {
           >
             {ids.map(id => {
               return (
-                /* eslint-disable-next-line */
-                <Grid key={id} item xs={4} sm={6} md={4}>
-                  <LazyLoad once={once} height={200} offset={[1000, 0]}>
-                    <Pokemon id={id} setCurrentId={this.setCurrentId} />
-                  </LazyLoad>
+                <Grid key={id} item xs={4} sm={3} md={3}>
+                  <Pokemon id={id} setCurrentId={this.setCurrentId} />
                 </Grid>
               );
             })}
