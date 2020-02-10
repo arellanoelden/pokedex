@@ -3,9 +3,13 @@ import ReactDOM from "react-dom";
 import App from "./components/App";
 import * as serviceWorker from "./service-worker";
 import UserProvider from "./providers/UserProvider";
+import PokeIdProvider from "./providers/pokeIdProvider";
+
 ReactDOM.render(
   <UserProvider>
-    <App />
+    <PokeIdProvider>
+      <App />
+    </PokeIdProvider>
   </UserProvider>,
   document.getElementById("root")
 );

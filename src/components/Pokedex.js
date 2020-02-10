@@ -2,9 +2,9 @@ import React from "react";
 import Pokemon from "./Pokemon";
 import Grid from "@material-ui/core/Grid";
 import Pokeentry from "./Pokeentry";
-import Navbar from "./NavBar";
 import { firestore } from "../firebase";
-import { pokeIds } from "../Pokemap";
+import withPokeIds from "./withPokeIds";
+import withUser from "./withUser";
 
 class Pokedex extends React.Component {
   constructor(props) {
@@ -13,39 +13,36 @@ class Pokedex extends React.Component {
     const nameMap = require("../Pokemap").objectMap();
     this.state = {
       currentId: -1,
-      ids: pokeIds,
       loading: true,
       nameMap,
       favorites: {}
     };
     this.setCurrentId = this.setCurrentId.bind(this);
-    this.setIds = this.setIds.bind(this);
   }
-  componentDidMount = async () => {
-    this.unsubscribe = firestore
-      .collection("favorites")
-      .onSnapshot(snapshot => {
-        const favorites = {};
-        snapshot.forEach(doc => {
-          favorites[doc.data().id] = true;
+  async componentWillReceiveProps(nextProps) {
+    if (!this.props.user && nextProps.user) {
+      const { uid } = nextProps.user;
+      this.unsubscribe = firestore
+        .collection(`users/${uid}/favorites`)
+        .onSnapshot(snapshot => {
+          const favorites = {};
+          snapshot.forEach(doc => {
+            favorites[doc.data().id] = true;
+          });
+          this.setState({ favorites });
+          this.setState({ loading: false });
         });
-        this.setState({ favorites });
-        this.setState({ loading: false });
-      });
-  };
+    }
+  }
   setCurrentId(currentId) {
     this.setState({ currentId });
   }
-  setIds(ids) {
-    this.setState({ ids });
-  }
   render() {
-    const { currentId, ids, favorites, loading, nameMap } = this.state;
+    const { currentId, favorites, loading, nameMap } = this.state;
+    const { ids } = this.props;
     return (
       <React.Fragment>
-        <Navbar setIds={this.setIds} />
         <div className="pokedex-container" style={{ padding: 15 }}>
-          <div className="sprite-1" />
           <Grid
             container
             spacing={3}
@@ -77,4 +74,4 @@ class Pokedex extends React.Component {
   }
 }
 
-export default Pokedex;
+export default withUser(withPokeIds(Pokedex));

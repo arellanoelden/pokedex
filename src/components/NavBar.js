@@ -9,6 +9,8 @@ import TextField from "@material-ui/core/TextField";
 import { firestore } from "../firebase";
 import { pokeIds } from "../Pokemap";
 import withUser from "./withUser";
+import withPokeIds from "./withPokeIds";
+import { Match } from "@reach/router";
 
 const styles = theme => ({
   link: {
@@ -76,8 +78,9 @@ class NavBar extends React.Component {
   }
   toggleFavorites() {
     if (!this.state.showFavorites) {
+      const { uid } = this.props.user;
       firestore
-        .collection("favorites")
+        .collection(`users/${uid}/favorites`)
         .get()
         .then(snapshot => {
           const favorites = [];
@@ -94,9 +97,8 @@ class NavBar extends React.Component {
     }
   }
   render() {
-    const { classes, user, setIds } = this.props;
+    const { classes, user } = this.props;
     const navText = user ? "Profile" : "Login/Register";
-
     return (
       <AppBar color="primary" position="sticky">
         <Toolbar variant="dense" className={classes.toolbar}>
@@ -105,28 +107,36 @@ class NavBar extends React.Component {
               Pokedex
             </Link>
           </Typography>
-          {setIds && (
-            <div className={classes.search}>
-              <TextField
-                id="filled-basic"
-                label="Search"
-                variant="filled"
-                onChange={this.filter}
-              />
-            </div>
-          )}
+          <Match path="/">
+            {props =>
+              props.match && (
+                <div className={classes.search}>
+                  <TextField
+                    id="filled-basic"
+                    label="Search"
+                    variant="filled"
+                    onChange={this.filter}
+                  />
+                </div>
+              )
+            }
+          </Match>
           <div>
-            {user &&
-              setIds && (
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={this.toggleFavorites}
-                  style={{ marginRight: "1rem" }}
-                >
-                  {this.state.showFavorites ? "Show All" : "Show Favorites"}
-                </Button>
-              )}
+            <Match path="/">
+              {props =>
+                props.match &&
+                user && (
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={this.toggleFavorites}
+                    style={{ marginRight: "1rem" }}
+                  >
+                    {this.state.showFavorites ? "Show All" : "Show Favorites"}
+                  </Button>
+                )
+              }
+            </Match>
             <Link className={classes.link} to="/profile">
               {navText}
             </Link>
@@ -139,4 +149,4 @@ class NavBar extends React.Component {
 
 const pokeNames = require("../Pokemap").pokeNames();
 
-export default withStyles(styles)(withUser(NavBar));
+export default withStyles(styles)(withUser(withPokeIds(NavBar)));

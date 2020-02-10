@@ -11,6 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { firestore } from "../firebase";
+import withUser from "./withUser";
 
 const styles = theme => ({
   link: {
@@ -25,10 +26,10 @@ const styles = theme => ({
     marginBottom: "0.75rem",
     height: 75,
     [theme.breakpoints.up("md")]: {
-      height: 350
+      height: 100
     },
     [theme.breakpoints.up("xl")]: {
-      height: 400
+      height: 125
     }
   },
   card: {
@@ -37,12 +38,14 @@ const styles = theme => ({
   }
 });
 
-class Pokedex extends React.Component {
+class Pokemon extends React.Component {
   constructor(props) {
     super(props);
     this.favoritePokemon = this.favoritePokemon.bind(this);
   }
   favoritePokemon(id) {
+    const { uid } = this.props.user;
+    firestore.collection(`users/${uid}/favorites`).add({ id });
     firestore.collection("favorites").add({ id });
   }
   render() {
@@ -65,7 +68,7 @@ class Pokedex extends React.Component {
             <Skeleton
               variant="rect"
               width="100%"
-              height="5rem"
+              height="3rem"
               className="sprite"
             />
           ) : (
@@ -100,4 +103,4 @@ class Pokedex extends React.Component {
   }
 }
 
-export default withStyles(styles)(Pokedex);
+export default withStyles(styles)(withUser(Pokemon));

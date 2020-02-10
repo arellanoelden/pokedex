@@ -7,6 +7,7 @@ import "../styles/style.css";
 import "../styles/sprites.css";
 import Authentication from "./Authentication";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import Navbar from "./NavBar";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -32,6 +33,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <Navbar />
       <Router>
         <Pokedex path="/" />
         <Authentication path="profile" />
