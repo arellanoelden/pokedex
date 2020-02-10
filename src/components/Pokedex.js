@@ -13,15 +13,14 @@ class Pokedex extends React.Component {
     const nameMap = require("../Pokemap").objectMap();
     this.state = {
       currentId: -1,
-      loading: true,
       nameMap,
       favorites: {}
     };
     this.setCurrentId = this.setCurrentId.bind(this);
   }
-  async componentWillReceiveProps(nextProps) {
-    if (!this.props.user && nextProps.user) {
-      const { uid } = nextProps.user;
+  async componentDidMount() {
+    if (this.props.user) {
+      const { uid } = this.props.user;
       this.unsubscribe = firestore
         .collection(`users/${uid}/favorites`)
         .onSnapshot(snapshot => {
@@ -30,7 +29,25 @@ class Pokedex extends React.Component {
             favorites[doc.data().id] = true;
           });
           this.setState({ favorites });
-          this.setState({ loading: false });
+        });
+    }
+  }
+  async componentWillUnmount() {
+    if (this.props.user) {
+      this.unsubscribe();
+    }
+  }
+  async componentDidUpdate(prevProps) {
+    if (this.props.user && !prevProps.user) {
+      const { uid } = this.props.user;
+      this.unsubscribe = firestore
+        .collection(`users/${uid}/favorites`)
+        .onSnapshot(snapshot => {
+          const favorites = {};
+          snapshot.forEach(doc => {
+            favorites[doc.data().id] = true;
+          });
+          this.setState({ favorites });
         });
     }
   }

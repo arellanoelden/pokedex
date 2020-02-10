@@ -49,19 +49,29 @@ class Pokemon extends React.Component {
     firestore.collection("favorites").add({ id });
   }
   render() {
-    const { classes, setCurrentId, favorite, name, id, loading } = this.props;
+    const {
+      classes,
+      setCurrentId,
+      favorite,
+      name,
+      id,
+      loading,
+      user
+    } = this.props;
 
     return (
       <Card className={classes.card} id={`${id}`}>
         <CardActions>
-          <IconButton
-            aria-label="delete"
-            className={classes.margin}
-            size="small"
-            onClick={() => this.favoritePokemon(id)}
-          >
-            <FavoriteIcon color={favorite ? "primary" : "inherit"} />
-          </IconButton>
+          {user && (
+            <IconButton
+              aria-label="delete"
+              className={classes.margin}
+              size="small"
+              onClick={() => this.favoritePokemon(id)}
+            >
+              <FavoriteIcon color={favorite ? "primary" : "inherit"} />
+            </IconButton>
+          )}
         </CardActions>
         <CardActionArea onClick={() => setCurrentId(id)}>
           {loading ? (
