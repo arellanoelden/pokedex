@@ -3,8 +3,9 @@ import { Router } from "@reach/router";
 import Pokedex from "./Pokedex";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { red, cyan, grey } from "@material-ui/core/colors";
-import "./styles/style.css";
-import "./styles/sprites.css";
+import "../styles/style.css";
+import "../styles/sprites.css";
+import Authentication from "./Authentication";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <Pokedex path="/" />
+        <Authentication path="profile" />
       </Router>
     </ThemeProvider>
   );

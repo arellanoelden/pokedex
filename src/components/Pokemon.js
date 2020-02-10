@@ -1,8 +1,16 @@
 import React from "react";
-import { Card, CardActionArea, CardContent } from "@material-ui/core";
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  CardActions,
+  IconButton
+} from "@material-ui/core";
+import FavoriteIcon from "@material-ui/icons/Favorite";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Skeleton from "@material-ui/lab/Skeleton";
+import { firestore } from "../firebase";
 
 const styles = theme => ({
   link: {
@@ -30,26 +38,42 @@ const styles = theme => ({
 });
 
 class Pokedex extends React.Component {
-  state = {
-    loading: true,
-    id: this.props.id
-  };
-  componentDidMount() {
-    const nameMap = require("./Pokemap").objectMap();
-    const name = nameMap[this.props.id];
-    this.setState({
-      name,
-      loading: false
-    });
+  constructor(props) {
+    super(props);
+    this.favoritePokemon = this.favoritePokemon.bind(this);
+  }
+  favoritePokemon(id) {
+    firestore.collection("favorites").add({ id });
   }
   render() {
-    const { classes, setCurrentId } = this.props;
-    const { name, id, loading } = this.state;
+    const { classes, setCurrentId, favorite, name, id, loading } = this.props;
 
     return (
       <Card className={classes.card} id={`${id}`}>
+        <CardActions>
+          <IconButton
+            aria-label="delete"
+            className={classes.margin}
+            size="small"
+            onClick={() => this.favoritePokemon(id)}
+          >
+            <FavoriteIcon color={favorite ? "primary" : "inherit"} />
+          </IconButton>
+        </CardActions>
         <CardActionArea onClick={() => setCurrentId(id)}>
-          <div style={{ height: "10rem" }} className={`sprite sprite-${id}`} />
+          {loading ? (
+            <Skeleton
+              variant="rect"
+              width="100%"
+              height="5rem"
+              className="sprite"
+            />
+          ) : (
+            <div
+              style={{ height: "10rem" }}
+              className={`sprite sprite-${id}`}
+            />
+          )}
           <CardContent style={{ padding: 0 }}>
             {loading ? (
               <React.Fragment>

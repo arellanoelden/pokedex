@@ -66,7 +66,7 @@ class Pokeentry extends React.Component {
   constructor(props) {
     super(props);
     window.scrollTo(0, 0);
-    const maps = require("./Pokemap.js");
+    const maps = require("../Pokemap.js");
     const map = maps.objectMap();
     const colors = maps.typeColor();
     const id = isNaN(this.props.id) ? map[this.props.id] : this.props.id;
