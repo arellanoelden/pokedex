@@ -1,5 +1,9 @@
 import React, { Component } from "react";
-import { signInWithGooogle, signIn } from "../firebase";
+import { signInWithGoogle, signIn } from "../firebase";
+import { navigate } from "@reach/router";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Card from "@material-ui/core/Card";
 
 class SignIn extends Component {
   state = { email: "", password: "" };
@@ -8,38 +12,60 @@ class SignIn extends Component {
     const { name, value } = event.target;
 
     this.setState({ [name]: value });
+    this.googleSignIn = this.googleSignIn.bind(this);
   };
 
   handleSubmit = event => {
     event.preventDefault();
     const { email, password } = this.state;
-    signIn(email, password);
+
+    signIn(email, password).then(response => {
+      if (response.user) navigate("/");
+    });
     this.setState({ email: "", password: "" });
   };
+
+  googleSignIn() {
+    signInWithGoogle().then(response => {
+      if (response.user) navigate("/");
+    });
+  }
 
   render() {
     const { email, password } = this.state;
 
     return (
-      <form className="SignIn" onSubmit={this.handleSubmit}>
-        <h2>Sign In</h2>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={email}
-          onChange={this.handleChange}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={password}
-          onChange={this.handleChange}
-        />
-        <input type="submit" value="Sign In" />
-        <button onClick={signInWithGooogle}>Sign In With Google</button>
-      </form>
+      <Card className="signCard">
+        <form onSubmit={this.handleSubmit} className="signForm">
+          <h2>Sign In</h2>
+          <TextField
+            variant="filled"
+            label="Email"
+            type="email"
+            name="email"
+            value={email}
+            onChange={this.handleChange}
+          />
+          <TextField
+            variant="filled"
+            label="Password"
+            type="password"
+            name="password"
+            value={password}
+            onChange={this.handleChange}
+          />
+          <Button variant="contained" type="submit">
+            Sign In
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={this.googleSignIn}
+          >
+            Sign In With Google
+          </Button>
+        </form>
+      </Card>
     );
   }
 }

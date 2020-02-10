@@ -6,11 +6,11 @@ import UserProvider from "./providers/UserProvider";
 import PokeIdProvider from "./providers/pokeIdProvider";
 
 ReactDOM.render(
-  <UserProvider>
-    <PokeIdProvider>
+  <PokeIdProvider>
+    <UserProvider>
       <App />
-    </PokeIdProvider>
-  </UserProvider>,
+    </UserProvider>
+  </PokeIdProvider>,
   document.getElementById("root")
 );
 

@@ -45,8 +45,18 @@ class Pokemon extends React.Component {
   }
   favoritePokemon(id) {
     const { uid } = this.props.user;
-    firestore.collection(`users/${uid}/favorites`).add({ id });
-    firestore.collection("favorites").add({ id });
+    const { favorite } = this.props;
+    if (!favorite) {
+      firestore
+        .collection(`users/${uid}/favorites`)
+        .doc(`${id}`)
+        .set({ id });
+    } else {
+      firestore
+        .collection(`users/${uid}/favorites`)
+        .doc(`${id}`)
+        .delete();
+    }
   }
   render() {
     const {

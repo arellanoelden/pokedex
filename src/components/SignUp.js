@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import { auth, createUserProfileDocument } from "../firebase";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Card from "@material-ui/core/Card";
+import { navigate } from "@reach/router";
 
 class SignUp extends Component {
   state = { displayName: "", email: "", password: "" };
 
   handleChange = event => {
     const { name, value } = event.target;
-
     this.setState({ [name]: value });
   };
 
@@ -14,14 +17,15 @@ class SignUp extends Component {
     event.preventDefault();
 
     const { email, password, displayName } = this.state;
-
     try {
       const { user } = await auth.createUserWithEmailAndPassword(
         email,
         password
       );
 
-      createUserProfileDocument(user, { displayName });
+      createUserProfileDocument(user, { displayName }).then(response => {
+        if (response.id) navigate("/");
+      });
     } catch (error) {
       console.error(error);
     }
@@ -33,31 +37,38 @@ class SignUp extends Component {
     const { displayName, email, password } = this.state;
 
     return (
-      <form className="SignUp" onSubmit={this.handleSubmit}>
-        <h2>Sign Up</h2>
-        <input
-          type="text"
-          name="displayName"
-          placeholder="Display Name"
-          value={displayName}
-          onChange={this.handleChange}
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={email}
-          onChange={this.handleChange}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={password}
-          onChange={this.handleChange}
-        />
-        <input type="submit" value="Sign Up" />
-      </form>
+      <Card className="signCard">
+        <form onSubmit={this.handleSubmit} className="signForm">
+          <h2>Sign Up</h2>
+          <TextField
+            variant="filled"
+            label="Display Name"
+            type="text"
+            name="displayName"
+            value={displayName}
+            onChange={this.handleChange}
+          />
+          <TextField
+            variant="filled"
+            label="Email"
+            type="email"
+            name="email"
+            value={email}
+            onChange={this.handleChange}
+          />
+          <TextField
+            variant="filled"
+            label="Password"
+            type="password"
+            name="password"
+            value={password}
+            onChange={this.handleChange}
+          />
+          <Button variant="contained" type="submit">
+            Sign Up
+          </Button>
+        </form>
+      </Card>
     );
   }
 }

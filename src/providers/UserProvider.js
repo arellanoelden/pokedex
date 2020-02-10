@@ -1,5 +1,7 @@
 import React, { Component, createContext } from "react";
 import { auth, createUserProfileDocument } from "../firebase";
+import withPokeIds from "../components/withPokeIds";
+import { pokeIds } from "../Pokemap";
 
 export const UserContext = createContext();
 
@@ -17,6 +19,8 @@ class UserProvider extends Component {
         userRef.onSnapshot(snapshot => {
           this.setState({ user: { uid: snapshot.id, ...snapshot.data() } });
         });
+      } else {
+        this.props.setIds(pokeIds);
       }
       this.setState({ user: userAuth });
     });
@@ -33,4 +37,4 @@ class UserProvider extends Component {
   }
 }
 
-export default UserProvider;
+export default withPokeIds(UserProvider);

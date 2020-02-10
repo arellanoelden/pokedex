@@ -4,7 +4,7 @@ import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 
 const SignInAndSignUp = () => (
-  <div>
+  <div className="signContainer">
     <SignIn />
     <SignUp />
   </div>
