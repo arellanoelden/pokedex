@@ -38,7 +38,7 @@ const Pokedex = ({ ids }) => {
 
   return (
     <React.Fragment>
-      <div className="pokedex-container" style={{ padding: 15 }}>
+      <div className="pokedex-container">
         <Grid
           container
           spacing={3}

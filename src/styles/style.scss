@@ -6,11 +6,21 @@ body {
   background-color: #ef5350;
   // overflow-y: hidden;
 }
+header {
+  height: 5rem;
+  justify-content: center;
+}
+.MuiGrid-container.pokedex {
+  margin: 0;
+  max-height: 92vh;
+  overflow-y: auto;
+}
 .pokedex {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: flex-start;
+  flex: 3;
   @media screen and (max-width: 600px) {
     &.activeId {
       overflow-y: hidden;
@@ -26,23 +36,12 @@ body {
 .pokedex-container {
   display: flex;
   flex-grow: 1;
-  .pokedex-container {
-    width: 30%;
-  }
   .currentPokemon {
+    flex: 2;
+    max-height: 92vh;
+    overflow-y: auto;
     position: absolute;
-    .pokemon-container {
-      padding: 1rem;
-      top: 4rem;
-      bottom: 0rem;
-      right: 0;
-      left: 0;
-      position: fixed;
-      overflow-y: scroll;
-      overflow-x: hidden;
-      background-color: #ef5350;
-    }
-
+    background-color: #ef5350;
     .sprite {
       height: 10rem;
       @media screen and (min-width: 960px) {
@@ -52,23 +51,20 @@ body {
     }
 
     .MuiBreadcrumbs-li {
-      width: 30%;
+      width: auto;
       .sprite.breadcrumb {
         width: 5rem;
         margin-right: 0;
       }
     }
 
+    .pokemon-container {
+      margin: 12px;
+    }
     @media screen and (min-width: 960px) {
-      position: relative;
-      width: 70%;
+      position: initial;
       .pokemon-container {
-        top: initial;
-        bottom: initial;
-        right: initial;
-        left: initial;
         overflow-y: auto;
-        padding: 0 15px;
       }
     }
   }

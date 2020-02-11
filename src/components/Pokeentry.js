@@ -42,7 +42,6 @@ const styles = theme => ({
     }
   },
   card: {
-    padding: 10,
     backgroundColor: theme.palette.secondary.main
   },
   breadcrumbs: {
