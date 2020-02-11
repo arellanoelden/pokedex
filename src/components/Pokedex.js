@@ -38,6 +38,7 @@ const Pokedex = ({ ids }) => {
 
   return (
     <React.Fragment>
+      <button> search</button>
       <div className="pokedex-container">
         <Grid
           container

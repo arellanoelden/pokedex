@@ -47,9 +47,10 @@ header {
     overflow-y: auto;
     position: absolute;
     right: 0;
-    max-width: 0px;
+    left: 100vw;
+    max-width: 100vw;
     background-color: #ef5350;
-    transition: max-width 0.5s ease-out;
+    transition: max-width 1.25s ease-out, left 0.25s ease-out;
     .sprite {
       height: 10rem;
       @media screen and (min-width: 960px) {
@@ -60,6 +61,7 @@ header {
 
     &.active {
       max-width: 100vw;
+      left: 0;
     }
     .MuiBreadcrumbs-ol {
       display: flex;
@@ -76,6 +78,11 @@ header {
       margin: 12px;
     }
     @media screen and (min-width: 960px) {
+      max-width: 0;
+      &.active {
+        max-width: 100vw;
+        left: 0;
+      }
       position: initial;
       .pokemon-container {
         overflow-y: auto;
