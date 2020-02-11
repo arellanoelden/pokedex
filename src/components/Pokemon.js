@@ -92,10 +92,7 @@ class Pokemon extends React.Component {
               className="sprite"
             />
           ) : (
-            <div
-              style={{ height: "10rem" }}
-              className={`sprite sprite-${id}`}
-            />
+            <div className={`sprite sprite-${id}`} />
           )}
           <CardContent style={{ padding: 0 }}>
             {loading ? (

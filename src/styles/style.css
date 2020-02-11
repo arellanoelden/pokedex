@@ -34,6 +34,13 @@ header {
 .sprite {
   background-repeat: no-repeat;
   background-position: center;
+  background-size: contain;
+  height: 7rem;
+}
+@media screen and (min-width: 960px) {
+  .sprite {
+    height: 10rem;
+  }
 }
 
 .pokedex-container {
@@ -45,22 +52,31 @@ header {
   max-height: 92vh;
   overflow-y: auto;
   position: absolute;
+  right: 0;
+  max-width: 0px;
   background-color: #ef5350;
+  transition: max-width 0.5s ease-out;
 }
 .pokedex-container .currentPokemon .sprite {
   height: 10rem;
 }
 @media screen and (min-width: 960px) {
   .pokedex-container .currentPokemon .sprite {
-    width: 25%;
+    width: 100%;
     margin-right: 2rem;
   }
 }
-.pokedex-container .currentPokemon .MuiBreadcrumbs-li {
-  width: auto;
+.pokedex-container .currentPokemon.active {
+  max-width: 100vw;
 }
-.pokedex-container .currentPokemon .MuiBreadcrumbs-li .sprite.breadcrumb {
-  width: 5rem;
+.pokedex-container .currentPokemon .MuiBreadcrumbs-ol {
+  display: flex;
+}
+.pokedex-container .currentPokemon .MuiBreadcrumbs-ol .MuiBreadcrumbs-li {
+  flex: 1;
+}
+.pokedex-container .currentPokemon .MuiBreadcrumbs-ol .MuiBreadcrumbs-li .sprite.breadcrumb {
+  width: 100%;
   margin-right: 0;
 }
 .pokedex-container .currentPokemon .pokemon-container {

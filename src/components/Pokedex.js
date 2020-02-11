@@ -46,7 +46,7 @@ const Pokedex = ({ ids }) => {
         >
           {ids.map(id => {
             return (
-              <Grid key={id} item xs={4} sm={3} md={3}>
+              <Grid key={id} item xs={4} sm={3} md={currentId > 0 ? 3 : 3}>
                 <Pokemon
                   id={id}
                   setCurrentId={setCurrentId}
@@ -58,10 +58,7 @@ const Pokedex = ({ ids }) => {
             );
           })}
         </Grid>
-        <section
-          className="currentPokemon"
-          style={{ display: currentId > 0 ? "block" : "none" }}
-        >
+        <section className={`currentPokemon ${currentId > 0 ? "active" : ""}`}>
           <Pokeentry id={currentId} setCurrentId={setCurrentId} />
         </section>
       </div>

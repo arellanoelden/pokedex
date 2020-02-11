@@ -186,7 +186,7 @@ class Pokeentry extends React.Component {
             let chain = [];
             let chains = response.chain.evolves_to;
             let chainId = 0;
-            if (chains) {
+            if (chains.length > 0) {
               // starting ID not given
               let index = response.chain.species.url.split("/");
               chainId = index[index.length - 2];
@@ -214,10 +214,10 @@ class Pokeentry extends React.Component {
                 });
                 chains = chains[0].evolves_to;
               }
-              this.setState({
-                chain
-              });
             }
+            this.setState({
+              chain
+            });
           })
           .catch(error => console.error("Error:", error));
       });
@@ -290,11 +290,16 @@ class Pokeentry extends React.Component {
                 })}
               </section>
             </div>
-            <div style={{ width: "100%" }}>
-              <h2>Evolutions: </h2>
-              <Breadcrumbs separator="" maxItems={10} aria-label="breadcrumb">
-                {this.state.chain
-                  ? this.state.chain.map((evolution, index) => {
+            {this.state.chain &&
+              this.state.chain.length > 0 && (
+                <div style={{ width: "100%", marginTop: "1rem" }}>
+                  <h2>Evolutions: </h2>
+                  <Breadcrumbs
+                    separator=""
+                    maxItems={10}
+                    aria-label="breadcrumb"
+                  >
+                    {this.state.chain.map((evolution, index) => {
                       return (
                         <div
                           key={index}
@@ -310,14 +315,15 @@ class Pokeentry extends React.Component {
                           {evolution.name}
                         </div>
                       );
-                    })
-                  : ""}
-              </Breadcrumbs>
-            </div>
+                    })}
+                  </Breadcrumbs>
+                </div>
+              )}
             <div
               className="types"
               style={{
-                width: "100%"
+                width: "100%",
+                marginTop: "1rem"
               }}
             >
               <h3>Damage when attacked</h3>
