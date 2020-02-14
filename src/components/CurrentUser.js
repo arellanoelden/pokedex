@@ -1,21 +1,23 @@
 import React from "react";
-
 import { signOut } from "../firebase";
+import Card from "@material-ui/core/Card";
+import Button from "@material-ui/core/Button";
 
 const CurrentUser = ({ displayName, photoURL, email, children }) => {
   return (
-    <section className="CurrentUser">
-      <div className="CurrentUser--profile">
-        {photoURL && <img src={photoURL} alt={displayName} />}
-        <div className="CurrentUser--information">
+    <section className="currentUser">
+      <Card className="currentUser-card">
+        <div className="currentUser--information">
           <h2>{displayName}</h2>
           <p className="email">{email}</p>
         </div>
-      </div>
-      <div>
-        <div>{children}</div>
-        <button onClick={signOut}>Sign Out</button>
-      </div>
+        <div>
+          <div>{children}</div>
+          <Button color="secondary" variant="contained" onClick={signOut}>
+            Sign Out
+          </Button>
+        </div>
+      </Card>
     </section>
   );
 };

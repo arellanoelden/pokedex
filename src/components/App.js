@@ -34,7 +34,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Navbar />
-      <Router>
+      <Router className="currentPage">
         <Pokedex path="/" />
         <Authentication path="profile" />
       </Router>

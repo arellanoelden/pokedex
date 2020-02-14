@@ -37,34 +37,32 @@ const Pokedex = ({ ids }) => {
   );
 
   return (
-    <React.Fragment>
-      <button> search</button>
-      <div className="pokedex-container">
-        <Grid
-          container
-          spacing={3}
-          className={currentId > 0 ? "activeId pokedex" : "pokedex"}
-        >
-          {ids.map(id => {
-            return (
-              <Grid key={id} item xs={4} sm={3} md={currentId > 0 ? 3 : 3}>
-                <Pokemon
-                  id={id}
-                  setCurrentId={setCurrentId}
-                  favorite={favorites[id]}
-                  name={nameMap[id]}
-                  loading={loading}
-                />
-              </Grid>
-            );
-          })}
-        </Grid>
-        <section className={`currentPokemon ${currentId > 0 ? "active" : ""}`}>
-          <Pokeentry id={currentId} setCurrentId={setCurrentId} />
-        </section>
-      </div>
-    </React.Fragment>
+    <div className="pokedex-container">
+      <Grid
+        container
+        spacing={3}
+        className={currentId > 0 ? "activeId pokedex" : "pokedex"}
+      >
+        {ids.map(id => {
+          return (
+            <Grid key={id} item xs={4} sm={3} md={currentId > 0 ? 3 : 3}>
+              <Pokemon
+                id={id}
+                setCurrentId={setCurrentId}
+                favorite={favorites[id]}
+                name={nameMap[id]}
+                loading={loading}
+              />
+            </Grid>
+          );
+        })}
+      </Grid>
+      <section className={`currentPokemon ${currentId > 0 ? "active" : ""}`}>
+        <Pokeentry id={currentId} setCurrentId={setCurrentId} />
+      </section>
+    </div>
   );
 };
 
-export default withUser(withPokeIds(Pokedex));
+const MemoizedPokedex = React.memo(Pokedex);
+export default withUser(withPokeIds(MemoizedPokedex));

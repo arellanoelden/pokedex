@@ -38,14 +38,17 @@ const styles = theme => ({
   }
 });
 
-class Pokemon extends React.Component {
-  constructor(props) {
-    super(props);
-    this.favoritePokemon = this.favoritePokemon.bind(this);
-  }
-  favoritePokemon(id) {
-    const { uid } = this.props.user;
-    const { favorite } = this.props;
+const Pokemon = ({
+  classes,
+  setCurrentId,
+  favorite,
+  name,
+  id,
+  loading,
+  user
+}) => {
+  const favoritePokemon = id => {
+    const { uid } = user;
     if (!favorite) {
       firestore
         .collection(`users/${uid}/favorites`)
@@ -57,67 +60,53 @@ class Pokemon extends React.Component {
         .doc(`${id}`)
         .delete();
     }
-  }
-  render() {
-    const {
-      classes,
-      setCurrentId,
-      favorite,
-      name,
-      id,
-      loading,
-      user
-    } = this.props;
+  };
 
-    return (
-      <Card className={classes.card} id={`${id}`}>
-        <CardActions>
-          {user && (
-            <IconButton
-              aria-label="delete"
-              className={classes.margin}
-              size="small"
-              onClick={() => this.favoritePokemon(id)}
-            >
-              <FavoriteIcon color={favorite ? "primary" : "inherit"} />
-            </IconButton>
-          )}
-        </CardActions>
-        <CardActionArea onClick={() => setCurrentId(id)}>
+  return (
+    <Card className={classes.card} id={`${id}`}>
+      <CardActions>
+        {user && (
+          <IconButton
+            aria-label="delete"
+            className={classes.margin}
+            size="small"
+            onClick={() => favoritePokemon(id)}
+          >
+            <FavoriteIcon color={favorite ? "primary" : "inherit"} />
+          </IconButton>
+        )}
+      </CardActions>
+      <CardActionArea onClick={() => setCurrentId(id)}>
+        {loading ? (
+          <Skeleton
+            variant="rect"
+            width="100%"
+            height="3rem"
+            className="sprite"
+          />
+        ) : (
+          <div className={`sprite sprite-${id}`} />
+        )}
+        <CardContent style={{ padding: 0 }}>
           {loading ? (
-            <Skeleton
-              variant="rect"
-              width="100%"
-              height="3rem"
-              className="sprite"
-            />
+            <React.Fragment>
+              <Skeleton
+                variant="rect"
+                width="100%"
+                className={classes.skeleton}
+              />
+              <Skeleton variant="rect" width="100%" />
+            </React.Fragment>
           ) : (
-            <div className={`sprite sprite-${id}`} />
+            <Typography className={classes.header} gutterBottom component="h2">
+              {name ? name.charAt(0).toUpperCase() + name.slice(1) : ""}
+            </Typography>
           )}
-          <CardContent style={{ padding: 0 }}>
-            {loading ? (
-              <React.Fragment>
-                <Skeleton
-                  variant="rect"
-                  width="100%"
-                  className={classes.skeleton}
-                />
-                <Skeleton variant="rect" width="100%" />
-              </React.Fragment>
-            ) : (
-              <Typography
-                className={classes.header}
-                gutterBottom
-                component="h2"
-              >
-                {name ? name.charAt(0).toUpperCase() + name.slice(1) : ""}
-              </Typography>
-            )}
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    );
-  }
-}
+        </CardContent>
+      </CardActionArea>
+    </Card>
+  );
+};
 
-export default withStyles(styles)(withUser(Pokemon));
+const MemoizedPokemon = React.memo(Pokemon);
+export default withStyles(styles)(withUser(MemoizedPokemon));
