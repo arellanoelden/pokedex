@@ -38,6 +38,9 @@ const Pokedex = ({ ids }) => {
 
   return (
     <div className="pokedex-container">
+      <section className={`currentPokemon ${currentId > 0 ? "active" : ""}`}>
+        <Pokeentry id={currentId} setCurrentId={setCurrentId} />
+      </section>
       <Grid
         container
         spacing={3}
@@ -57,9 +60,6 @@ const Pokedex = ({ ids }) => {
           );
         })}
       </Grid>
-      <section className={`currentPokemon ${currentId > 0 ? "active" : ""}`}>
-        <Pokeentry id={currentId} setCurrentId={setCurrentId} />
-      </section>
     </div>
   );
 };
