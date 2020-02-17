@@ -17,6 +17,7 @@ import HomeIcon from "@material-ui/icons/Home";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
+import ViewModule from "@material-ui/icons/ViewModule";
 
 const pokeNames = require("../Pokemap").pokeNames();
 
@@ -30,6 +31,9 @@ const NavBar = props => {
 
   function filter(e) {
     setSearch(e.currentTarget.value);
+    if (search === "") {
+      props.setIds(ids);
+    }
     if (search !== null) {
       let pokeIdsFiltered = pokeNames
         .filter(pokemon => pokemon.includes(e.target.value))
@@ -47,6 +51,11 @@ const NavBar = props => {
       props.setIds(ids);
     }
     navigate("/");
+    setNavActive(false);
+  }
+
+  function teamsNavigate() {
+    navigate("/teams");
     setNavActive(false);
   }
 
@@ -97,6 +106,14 @@ const NavBar = props => {
               <FavoriteIcon />
             </ListItemIcon>
             <ListItemText primary="Favorites" />
+          </ListItem>
+        )}
+        {user && (
+          <ListItem button onClick={() => teamsNavigate()}>
+            <ListItemIcon>
+              <ViewModule />
+            </ListItemIcon>
+            <ListItemText primary="Teams" />
           </ListItem>
         )}
       </List>

@@ -47,6 +47,7 @@ export const createUserProfileDocument = async (user, additionalData) => {
         email,
         photoURL,
         createdAt,
+        teamCount: 0,
         ...additionalData
       });
     } catch (error) {

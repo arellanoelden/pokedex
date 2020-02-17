@@ -64,5 +64,4 @@ const Pokedex = ({ ids }) => {
   );
 };
 
-const MemoizedPokedex = React.memo(Pokedex);
-export default withUser(withPokeIds(MemoizedPokedex));
+export default withUser(withPokeIds(Pokedex));

@@ -18,6 +18,9 @@ nav.pokeNav {
   background: white;
   transition: left 0.5s ease-out;
 }
+nav.pokeNav .MuiSvgIcon-root {
+  fill: #ef5350;
+}
 nav.pokeNav.active {
   left: 0vw;
 }
@@ -83,9 +86,6 @@ header.MuiAppBar-root {
   display: flex;
   flex-direction: row-reverse;
   flex-grow: 1;
-}
-.pokedex-container .MuiGrid-item {
-  transition: all 1s 0.15s ease-in-out;
 }
 .pokedex-container .currentPokemon {
   flex: 2;

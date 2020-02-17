@@ -6,7 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import Card from "@material-ui/core/Card";
 
 class SignIn extends Component {
-  state = { email: "", password: "" };
+  state = { email: "", password: "", errorMessage: "" };
 
   handleChange = event => {
     const { name, value } = event.target;
@@ -19,10 +19,17 @@ class SignIn extends Component {
     event.preventDefault();
     const { email, password } = this.state;
 
-    signIn(email, password).then(response => {
-      if (response.user) navigate("/");
-    });
-    this.setState({ email: "", password: "" });
+    signIn(email, password)
+      .then(response => {
+        if (response.user) navigate("/");
+      })
+      .catch(error => {
+        console.log("error: ", error);
+        this.setState({ errorMessage: "Invalid email and/or password." });
+      })
+      .finally(() => {
+        this.setState({ email: "", password: "" });
+      });
   };
 
   googleSignIn() {
@@ -32,7 +39,7 @@ class SignIn extends Component {
   }
 
   render() {
-    const { email, password } = this.state;
+    const { email, password, errorMessage } = this.state;
 
     return (
       <Card className="signCard">
@@ -43,6 +50,8 @@ class SignIn extends Component {
             label="Email"
             type="email"
             name="email"
+            error={errorMessage.length > 0}
+            helperText={errorMessage}
             value={email}
             onChange={this.handleChange}
           />

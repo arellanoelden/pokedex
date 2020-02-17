@@ -108,5 +108,4 @@ const Pokemon = ({
   );
 };
 
-const MemoizedPokemon = React.memo(Pokemon);
-export default withStyles(styles)(withUser(MemoizedPokemon));
+export default withStyles(styles)(withUser(Pokemon));

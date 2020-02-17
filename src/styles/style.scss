@@ -16,6 +16,9 @@ nav.pokeNav {
   left: -60vw;
   background: white;
   transition: left 0.5s ease-out;
+  .MuiSvgIcon-root {
+    fill: #ef5350;
+  }
   &.active {
     left: 0vw;
   }
@@ -79,10 +82,10 @@ header.MuiAppBar-root {
   display: flex;
   flex-direction: row-reverse;
   flex-grow: 1;
-  .MuiGrid-item {
-    //transition: all 1.25s 0.375s ease-in-out;
-    transition: all 1s 0.15s ease-in-out;
-  }
+  // .MuiGrid-item {
+  //   //transition: all 1.25s 0.375s ease-in-out;
+  //   transition: all 1s 0.15s ease-in-out;
+  // }
   .currentPokemon {
     flex: 2;
     max-height: 92vh;
