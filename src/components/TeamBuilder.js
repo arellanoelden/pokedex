@@ -56,6 +56,7 @@ const TeamBuilder = props => {
   const [error, setError] = useState("");
   const teamCount = useRef(0);
   const [snackOpen, setSnackOpen] = useState(false);
+  const [teamName, setTeamName] = useState(props.id ? props.id : "");
 
   useEffect(
     () => {
@@ -143,6 +144,7 @@ const TeamBuilder = props => {
           .doc(uid)
           .get();
         teamCount.current = doc.data().teamCount;
+        if (teamName === "") setTeamName(`team${teamCount.current}`);
       }
       if (uid && !teamCount.current) {
         getTeamCount();
@@ -154,25 +156,28 @@ const TeamBuilder = props => {
   function clearTeam() {
     setPokeArray([]);
   }
-  function saveTeam() {
-    const docName = props.id ? props.id : `team${teamCount.current + 1}`;
-    firestore
+  async function saveTeam() {
+    await firestore
       .collection(`users/${uid}/teams`)
-      .doc(docName)
+      .doc(teamName)
       .set({
         pokeArray
-      })
-      .then(() => {
-        setSnackOpen(true);
-        setTimeout(() => {
-          navigate("/teams");
-        }, 1000);
-        firestore
-          .collection("users")
-          .doc(uid)
-          .update({
-            teamCount: teamCount.current + 1
-          });
+      });
+    setSnackOpen(true);
+    if (props.id && teamName !== props.id) {
+      firestore
+        .collection(`users/${uid}/teams`)
+        .doc(props.id)
+        .delete();
+    }
+    setTimeout(() => {
+      navigate("/teams");
+    }, 1000);
+    firestore
+      .collection("users")
+      .doc(uid)
+      .update({
+        teamCount: teamCount.current + 1
       });
   }
   function deletePokemonFromTeam(id) {
@@ -207,7 +212,20 @@ const TeamBuilder = props => {
           Back to Teams
         </Button>
       )}
-      <h1>{props.id ? props.id : "Current Team"}</h1>
+      <h1>
+        {props.id || uid ? (
+          <TextField
+            label="Team Name"
+            color="secondary"
+            variant="outlined"
+            style={{ minWidth: 200 }}
+            value={teamName}
+            onChange={e => setTeamName(e.target.value)}
+          />
+        ) : (
+          "Current Team"
+        )}
+      </h1>
       {error && <p>{error}</p>}
       <div style={{ display: "flex", margin: "1rem 0", alignItems: "center" }}>
         <Autocomplete
