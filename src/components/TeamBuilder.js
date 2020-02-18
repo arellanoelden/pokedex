@@ -16,6 +16,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Clear from "@material-ui/icons/Clear";
 import { UserContext } from "../providers/UserProvider";
 import { firestore } from "../firebase";
+import { navigate } from "@reach/router";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 
@@ -32,13 +33,14 @@ const styles = theme => ({
     borderRadius: "0",
     color: "#FFF",
     width: "10rem",
+    marginRight: "1rem",
     [theme.breakpoints.down("sm")]: {
       width: "7.5rem"
     }
   }
 });
 
-const Team = props => {
+const TeamBuilder = props => {
   const currentUser = useContext(UserContext);
   let uid;
   if (currentUser && currentUser.uid) {
@@ -50,11 +52,26 @@ const Team = props => {
   const pokeMap = maps.objectMap();
   const pokeNames = maps.pokeNames();
   const [weakAgainst, setWeakAgainst] = useState([]);
-  const [pokeArray, setPokeArray] = useState([1, 2, 3]);
+  const [pokeArray, setPokeArray] = useState([]);
   const [error, setError] = useState("");
   const teamCount = useRef(0);
   const [snackOpen, setSnackOpen] = useState(false);
 
+  useEffect(
+    () => {
+      if (props.id) {
+        firestore
+          .collection(`users/${uid}/teams`)
+          .doc(props.id)
+          .get()
+          .then(doc => {
+            const data = doc.data();
+            if (data && data.pokeArray) setPokeArray(doc.data().pokeArray);
+          });
+      }
+    },
+    [props.id, uid]
+  );
   useEffect(
     () => {
       async function calculateTypeDisadvantages() {
@@ -138,19 +155,24 @@ const Team = props => {
     setPokeArray([]);
   }
   function saveTeam() {
-    const docName = `team${teamCount.current + 1}`;
+    const docName = props.id ? props.id : `team${teamCount.current + 1}`;
     firestore
       .collection(`users/${uid}/teams`)
       .doc(docName)
       .set({
         pokeArray
       })
-      .then(setSnackOpen(true));
-    firestore
-      .collection("users")
-      .doc(uid)
-      .update({
-        teamCount: teamCount.current + 1
+      .then(() => {
+        setSnackOpen(true);
+        setTimeout(() => {
+          navigate("/teams");
+        }, 1000);
+        firestore
+          .collection("users")
+          .doc(uid)
+          .update({
+            teamCount: teamCount.current + 1
+          });
       });
   }
   function deletePokemonFromTeam(id) {
@@ -175,7 +197,17 @@ const Team = props => {
       className="teamCardContainer"
       style={{ margin: "1rem", padding: "2rem 1rem" }}
     >
-      <h1>Current Team</h1>
+      {uid && (
+        <Button
+          variant="contained"
+          color="secondary"
+          style={{ height: "80%", marginBottom: "1rem", color: "white" }}
+          onClick={() => navigate("/teams")}
+        >
+          Back to Teams
+        </Button>
+      )}
+      <h1>{props.id ? props.id : "Current Team"}</h1>
       {error && <p>{error}</p>}
       <div style={{ display: "flex", margin: "1rem 0", alignItems: "center" }}>
         <Autocomplete
@@ -199,24 +231,24 @@ const Team = props => {
           style={{ height: "80%", marginLeft: "1rem", color: "white" }}
           onClick={() => clearTeam()}
         >
-          Clear Team
+          Clear
         </Button>
         {currentUser && (
           <Button
             variant="contained"
             color="secondary"
-            style={{ height: "80%", marginLeft: "1rem", color: "white" }}
+            style={{ height: "80%", marginLeft: "0.5rem", color: "white" }}
             onClick={() => saveTeam()}
           >
-            Save Team
+            Save
           </Button>
         )}
       </div>
       <div>
         <Grid container spacing={3}>
-          {pokeArray.map(pokemonId => (
-            <Grid key={`pokemon${pokemonId}`} item xs={4} sm={4} md={2}>
-              <Card key={`pokemon${pokemonId}`} className={classes.card}>
+          {pokeArray.map((pokemonId, index) => (
+            <Grid key={`pokemon${pokemonId}-${index}`} item xs={4} md={2}>
+              <Card className={classes.card}>
                 <CardActions
                   style={{ display: "flex", justifyContent: "flex-end" }}
                 >
@@ -248,20 +280,25 @@ const Team = props => {
           ))}
         </Grid>
       </div>
-      <Grid container spacing={3}>
-        {weakAgainst.map(type => (
-          <Grid key={type[0]} item xs={12} sm={6} md={6}>
-            {type[1]} pokemon weak to{" "}
-            <Chip
-              className={classes.type}
-              style={{
-                backgroundColor: colors[type[0]]
-              }}
-              label={type[0]}
-            />
+      {weakAgainst.length > 0 && (
+        <section>
+          <h2 style={{ margin: "1rem 0" }}>Team Type Disadvantages: </h2>
+          <Grid container spacing={3}>
+            {weakAgainst.map(type => (
+              <Grid key={type[0]} item xs={6} md={4}>
+                <Chip
+                  className={classes.type}
+                  style={{
+                    backgroundColor: colors[type[0]]
+                  }}
+                  label={type[0]}
+                />
+                {type[1]}
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
+        </section>
+      )}
       <Snackbar
         open={snackOpen}
         autoHideDuration={6000}
@@ -280,4 +317,4 @@ const Team = props => {
   );
 };
 
-export default withStyles(styles)(Team);
+export default withStyles(styles)(TeamBuilder);

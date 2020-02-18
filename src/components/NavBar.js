@@ -18,6 +18,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import ViewModule from "@material-ui/icons/ViewModule";
+import Assessment from "@material-ui/icons/Assessment";
 
 const pokeNames = require("../Pokemap").pokeNames();
 
@@ -56,6 +57,11 @@ const NavBar = props => {
 
   function teamsNavigate() {
     navigate("/teams");
+    setNavActive(false);
+  }
+
+  function teamsBuilderNavigate() {
+    navigate("/teamBuilder");
     setNavActive(false);
   }
 
@@ -116,6 +122,12 @@ const NavBar = props => {
             <ListItemText primary="Teams" />
           </ListItem>
         )}
+        <ListItem button onClick={() => teamsBuilderNavigate()}>
+          <ListItemIcon>
+            <Assessment />
+          </ListItemIcon>
+          <ListItemText primary="Team Checker" />
+        </ListItem>
       </List>
       <AppBar color="primary" position="sticky">
         <Toolbar variant="dense" style={{ justifyContent: "space-between" }}>
