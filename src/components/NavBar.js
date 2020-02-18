@@ -100,12 +100,6 @@ const NavBar = props => {
           </ListItemIcon>
           <ListItemText primary="Home" />
         </ListItem>
-        <ListItem button onClick={() => profileNavigate()}>
-          <ListItemIcon>
-            <AccountCircle />
-          </ListItemIcon>
-          <ListItemText primary={user ? "Profile" : "Login/Register"} />
-        </ListItem>
         {user && (
           <ListItem button onClick={() => displayFavorites()}>
             <ListItemIcon>
@@ -127,6 +121,12 @@ const NavBar = props => {
             <Assessment />
           </ListItemIcon>
           <ListItemText primary="Team Checker" />
+        </ListItem>
+        <ListItem button onClick={() => profileNavigate()}>
+          <ListItemIcon>
+            <AccountCircle />
+          </ListItemIcon>
+          <ListItemText primary={user ? "Profile" : "Login/Register"} />
         </ListItem>
       </List>
       <AppBar color="primary" position="sticky">

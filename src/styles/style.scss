@@ -52,7 +52,7 @@ header.MuiAppBar-root {
 
 .MuiGrid-container.pokedex {
   margin: 0;
-  max-height: 92vh;
+  max-height: 91vh;
   overflow-y: auto;
 }
 .pokedex {
@@ -88,7 +88,7 @@ header.MuiAppBar-root {
   // }
   .currentPokemon {
     flex: 2;
-    max-height: 92vh;
+    max-height: 91vh;
     overflow-y: auto;
     position: absolute;
     z-index: 1;
