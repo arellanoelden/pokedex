@@ -19,11 +19,10 @@ import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import ViewModule from "@material-ui/icons/ViewModule";
 import Assessment from "@material-ui/icons/Assessment";
-
-const pokeNames = require("../Pokemap").pokeNames();
+import { pokeNames, objectMap } from "../Pokemap";
 
 const NavBar = props => {
-  const map = require("../Pokemap").objectMap();
+  const map = objectMap;
   const ids = pokeIds;
   const [showFavorites, setShowFavorites] = useState(false);
   const [navActive, setNavActive] = useState(false);

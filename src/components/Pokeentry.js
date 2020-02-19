@@ -7,7 +7,7 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Skeleton from "@material-ui/lab/Skeleton";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-
+import { objectMap, typeColor, typeAdvantages } from "../Pokemap";
 const styles = theme => ({
   link: {
     textDecoration: "none",
@@ -65,12 +65,11 @@ class Pokeentry extends React.Component {
   constructor(props) {
     super(props);
     window.scrollTo(0, 0);
-    const maps = require("../Pokemap.js");
-    const map = maps.objectMap();
-    const colors = maps.typeColor();
+    const map = objectMap;
+    const colors = typeColor;
     const id = isNaN(this.props.id) ? map[this.props.id] : this.props.id;
 
-    this.typeMaps = maps.typeAdvantages();
+    this.typeMaps = typeAdvantages;
     const allTypes = [
       { name: "bug", damage: 1 },
       { name: "dark", damage: 1 },

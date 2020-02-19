@@ -10,6 +10,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Delete from "@material-ui/icons/Delete";
 import Edit from "@material-ui/icons/Edit";
 import Button from "@material-ui/core/Button";
+import { objectMap } from "../Pokemap";
 
 const styles = theme => ({
   header: {
@@ -27,8 +28,7 @@ const styles = theme => ({
 const Teams = props => {
   const currentUser = useContext(UserContext);
   const [teams, setTeams] = useState([]);
-  const maps = require("../Pokemap.js");
-  const pokeMap = maps.objectMap();
+  const pokeMap = objectMap;
   let uid;
   if (currentUser && currentUser.uid) {
     uid = currentUser.uid;

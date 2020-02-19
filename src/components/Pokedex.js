@@ -6,10 +6,11 @@ import { firestore } from "../firebase";
 import withPokeIds from "./withPokeIds";
 import withUser from "./withUser";
 import { UserContext } from "../providers/UserProvider";
+import { objectMap } from "../Pokemap";
 
 const Pokedex = ({ ids }) => {
   const currentUser = useContext(UserContext);
-  const nameMap = require("../Pokemap").objectMap();
+  const nameMap = objectMap;
   const [currentId, setCurrentId] = useState(-1);
   const [favorites, setFavorites] = useState({});
   const loading = false;

@@ -19,7 +19,7 @@ import { firestore } from "../firebase";
 import { navigate } from "@reach/router";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-
+import { objectMap, pokeNames, typeColor, typeAdvantages } from "../Pokemap";
 const styles = theme => ({
   header: {
     textAlign: "center",
@@ -46,11 +46,10 @@ const TeamBuilder = props => {
   if (currentUser && currentUser.uid) {
     uid = currentUser.uid;
   }
-  const maps = require("../Pokemap.js");
-  const typeMaps = maps.typeAdvantages();
-  const colors = maps.typeColor();
-  const pokeMap = maps.objectMap();
-  const pokeNames = maps.pokeNames();
+  const typeMaps = typeAdvantages;
+  const colors = typeColor;
+  const pokeMap = objectMap;
+  const pokeNamesList = pokeNames;
   const [weakAgainst, setWeakAgainst] = useState([]);
   const [pokeArray, setPokeArray] = useState([]);
   const [error, setError] = useState("");
@@ -230,7 +229,7 @@ const TeamBuilder = props => {
       <div style={{ display: "flex", margin: "1rem 0", alignItems: "center" }}>
         <Autocomplete
           id="combo-box-demo"
-          options={pokeNames}
+          options={pokeNamesList}
           onInputChange={select}
           renderInput={params => (
             <TextField
