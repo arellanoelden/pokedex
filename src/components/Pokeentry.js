@@ -1,11 +1,5 @@
 import React from "react";
-import { Link, navigate } from "@reach/router";
-import {
-  Card,
-  CardActionArea,
-  CardMedia,
-  CardContent
-} from "@material-ui/core";
+import { Card, CardActionArea, CardContent } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
@@ -13,11 +7,14 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Skeleton from "@material-ui/lab/Skeleton";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-
+import { objectMap, typeColor, typeAdvantages } from "../Pokemap";
 const styles = theme => ({
   link: {
     textDecoration: "none",
-    color: "white"
+    color: "white",
+    [theme.breakpoints.up("md")]: {
+      transform: "rotate(180deg)"
+    }
   },
   img: {
     width: "80%",
@@ -45,7 +42,6 @@ const styles = theme => ({
     }
   },
   card: {
-    padding: 10,
     backgroundColor: theme.palette.secondary.main
   },
   breadcrumbs: {
@@ -69,11 +65,11 @@ class Pokeentry extends React.Component {
   constructor(props) {
     super(props);
     window.scrollTo(0, 0);
-    const maps = require("./Pokemap.js");
-    const map = maps.objectMap();
-    const colors = maps.typeColor();
+    const map = objectMap;
+    const colors = typeColor;
     const id = isNaN(this.props.id) ? map[this.props.id] : this.props.id;
-    this.typeMaps = maps.typeAdvantages();
+
+    this.typeMaps = typeAdvantages;
     const allTypes = [
       { name: "bug", damage: 1 },
       { name: "dark", damage: 1 },
@@ -98,7 +94,6 @@ class Pokeentry extends React.Component {
     this.state = {
       loading: true,
       id,
-      imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
       colors,
       map,
       allTypes
@@ -109,12 +104,12 @@ class Pokeentry extends React.Component {
     this.setPokeInfo = this.setPokeInfo.bind(this);
   }
   componentDidMount() {
-    this.setPokeInfo(this.state.id);
+    if (this.state.id > 0) {
+      this.setPokeInfo(this.state.id);
+    }
   }
   componentDidUpdate(prevProps) {
-    const { pathname } = this.props.location;
-    const { pathname: prevPathname } = prevProps.location;
-    if (pathname && pathname !== prevPathname) {
+    if (this.props.id !== prevProps.id && this.props.id > 0) {
       const id = isNaN(this.props.id)
         ? this.state.map[this.props.id]
         : this.props.id;
@@ -190,13 +185,12 @@ class Pokeentry extends React.Component {
             let chain = [];
             let chains = response.chain.evolves_to;
             let chainId = 0;
-            if (chains) {
+            if (chains.length > 0) {
               // starting ID not given
               let index = response.chain.species.url.split("/");
               chainId = index[index.length - 2];
               chain.push({
                 name: response.chain.species.name,
-                url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${chainId}.png`,
                 pokeId: chainId
               });
               if (chains[1]) {
@@ -205,7 +199,6 @@ class Pokeentry extends React.Component {
                   chainId = index[index.length - 2];
                   chain.push({
                     name: currentChain.species.name,
-                    url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${chainId}.png`,
                     pokeId: chainId
                   });
                   chains = [];
@@ -216,54 +209,56 @@ class Pokeentry extends React.Component {
                 chainId = index[index.length - 2];
                 chain.push({
                   name: chains[0].species.name,
-                  url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${chainId}.png`,
                   pokeId: chainId
                 });
                 chains = chains[0].evolves_to;
               }
-              this.setState({
-                chain
-              });
             }
+            this.setState({
+              chain
+            });
           })
           .catch(error => console.error("Error:", error));
       });
   };
   handlePokemon = id => {
     this.setState({
-      id,
-      imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
+      id
     });
     this.setPokeInfo(id);
   };
   redirect = id => {
     return () => {
-      navigate(`${id}`);
+      this.setState({ id });
       this.handlePokemon(id);
     };
   };
   render() {
-    const { classes } = this.props;
+    const { classes, setCurrentId } = this.props;
     const { colors, allTypes } = this.state;
+    const { name, id, types, description } = this.state;
+
     if (this.state.loading) {
-      return <PokeEntrySkeleton classes={classes} allTypes={allTypes} />;
+      return (
+        <PokeEntrySkeleton
+          classes={classes}
+          allTypes={allTypes}
+          setCurrentId={setCurrentId}
+        />
+      );
     }
-    const { name, imageUrl, id, types, description } = this.state;
     return (
-      <div className="pokedex-container" style={{ padding: 15 }}>
+      <div className="pokemon-container">
         <Card className={classes.card} id={id}>
-          <Link to="/">
-            <IconButton aria-label="back" className={classes.link}>
-              <ArrowBackIcon />
-            </IconButton>
-          </Link>
+          <IconButton
+            aria-label="back"
+            onClick={() => setCurrentId(-1)}
+            className={classes.link}
+          >
+            <ArrowBackIcon />
+          </IconButton>
           <CardContent className={classes.cardContent}>
-            <CardMedia
-              className={classes.img}
-              component="img"
-              image={imageUrl}
-              alt={name}
-            />
+            <div className={`sprite sprite-${id}`} />
             <div
               style={{
                 flex: "1",
@@ -293,10 +288,17 @@ class Pokeentry extends React.Component {
                   );
                 })}
               </section>
-              <h2>Evolutions: </h2>
-              <Breadcrumbs separator="" maxItems={10} aria-label="breadcrumb">
-                {this.state.chain
-                  ? this.state.chain.map((evolution, index) => {
+            </div>
+            {this.state.chain &&
+              this.state.chain.length > 0 && (
+                <div style={{ width: "100%", marginTop: "1rem" }}>
+                  <h2>Evolutions: </h2>
+                  <Breadcrumbs
+                    separator=""
+                    maxItems={10}
+                    aria-label="breadcrumb"
+                  >
+                    {this.state.chain.map((evolution, index) => {
                       return (
                         <div
                           key={index}
@@ -304,18 +306,23 @@ class Pokeentry extends React.Component {
                           onClick={this.redirect(evolution.pokeId)}
                           className={classes.breadcrumbs}
                         >
-                          <img src={evolution.url} alt={evolution.name} />
+                          <div
+                            className={`sprite breadcrumb sprite-${
+                              evolution.pokeId
+                            }`}
+                          />
                           {evolution.name}
                         </div>
                       );
-                    })
-                  : ""}
-              </Breadcrumbs>
-            </div>
+                    })}
+                  </Breadcrumbs>
+                </div>
+              )}
             <div
               className="types"
               style={{
-                width: "100%"
+                width: "100%",
+                marginTop: "1rem"
               }}
             >
               <h3>Damage when attacked</h3>
@@ -364,14 +371,17 @@ class Pokeentry extends React.Component {
 const PokeEntrySkeleton = props => {
   const classes = props.classes;
   const allTypes = props.allTypes;
+  const setCurrentId = props.setCurrentId;
   return (
     <div className="pokedex-container" style={{ padding: 15 }}>
       <Card className={classes.card}>
-        <Link to="/">
-          <IconButton aria-label="back" className={classes.link}>
-            <ArrowBackIcon />
-          </IconButton>
-        </Link>
+        <IconButton
+          aria-label="back"
+          onClick={() => setCurrentId(-1)}
+          className={classes.link}
+        >
+          <ArrowBackIcon />
+        </IconButton>
         <CardActionArea>
           <CardContent className={classes.cardContent}>
             <Skeleton

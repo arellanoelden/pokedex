@@ -1,12 +1,15 @@
 import React from "react";
 import { Router } from "@reach/router";
-import NavBar from "./NavBar";
 import Pokedex from "./Pokedex";
-import Pokeentry from "./Pokeentry";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { red, cyan, grey } from "@material-ui/core/colors";
-import "./styles/style.css";
+import "../styles/style.css";
+import "../styles/sprites.css";
+import Authentication from "./Authentication";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import Navbar from "./NavBar";
+import TeamBuilder from "./TeamBuilder";
+import Teams from "./Teams";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -32,13 +35,14 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <div>
-        <NavBar />
-        <Router>
-          <Pokedex path="/" />
-          <Pokeentry path="/:id" />
-        </Router>
-      </div>
+      <Navbar />
+      <Router className="currentPage">
+        <Pokedex path="/" />
+        <Authentication path="profile" />
+        <Teams path="teams" />
+        <TeamBuilder path="teamBuilder" />
+        <TeamBuilder path="teamBuilder/:id" />
+      </Router>
     </ThemeProvider>
   );
 }
